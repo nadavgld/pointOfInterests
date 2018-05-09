@@ -5,7 +5,7 @@ exports = module.exports;
 exports.getVerificationQuestion = function (req, res) {
     var email = req.params.email;
 
-    dbUtil.execQuery("select * from users")
+    dbUtil.execQuery(`select question from Users where email = '${email}'`)
         .then((response) => {
             console.log(response);
             res.send(response);

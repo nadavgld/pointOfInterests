@@ -3,7 +3,7 @@ var dbUtil = require('../DButils');
 exports = module.exports;
 
 exports.getAllCategories = function (req, res) {
-    dbUtil.execQuery("select * from users")
+    dbUtil.execQuery("select * from Categories")
         .then((response) => {
             console.log(response);
             // res.send(response);
