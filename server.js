@@ -88,3 +88,19 @@ app.put('/updateFavoritePoints', (req, res) => {
 })
 
 app.listen(PORT, () => { console.log(`listening to ${PORT}`) })
+
+/*
+
+API CHANGES:
+
+register - 
+    add: answer to question, password
+
+POI Element - 
+    change: totalViewer->views
+    add: category_id, description
+
+FavoritePoint Element -
+    add: date
+
+*/

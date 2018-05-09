@@ -3,7 +3,7 @@ var dbUtil = require('../DButils');
 exports = module.exports;
 
 exports.getAllPointsOfInterests = function (req, res) {
-    dbUtil.execQuery("select * from users")
+    dbUtil.execQuery("select * from Points")
         .then((response) => {
             console.log(response);
             // res.send(response);
