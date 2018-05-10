@@ -7,25 +7,38 @@ exports.getVerificationQuestion = function (req, res) {
 
     dbUtil.execQuery(`select question from Users where email = '${email}'`)
         .then((response) => {
-            console.log(response);
-            res.send(response);
+            if (response[0])
+                res.send(response[0]);
+            else
+                res.status(500).send({ error: "Email is invalid" });
         })
         .catch((err) => {
             console.log(err);
+            res.status(500).send({ error: "Email is invalid" });
         })
 }
 
 exports.passwordRetrieve = function (req, res) {
+
     var user_id = parseInt(req.body.user_id);
+    
+    if(isNaN(user_id)){
+        res.status(500).send({ error: "Could not match user id" })
+        return;
+    }
+
     var answer = req.body.answer;
 
-    dbUtil.execQuery("select * from users")
+    dbUtil.execQuery(`select password from users where answer = '${answer}' and id = '${user_id}'`)
         .then((response) => {
-            console.log(response);
-            res.send(response);
+            if (response[0])
+                res.send(response[0]);
+            else
+                res.status(500).send({ error: "Answer is invalid" });
         })
         .catch((err) => {
             console.log(err);
+            res.status(500).send({ error: "Answer is invalid" });
         })
 }
 
