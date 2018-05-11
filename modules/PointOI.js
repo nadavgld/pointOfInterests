@@ -1,95 +1,84 @@
+var express = require('express');
+var router = express.Router();
+
 var dbUtil = require('../DButils');
 
-exports = module.exports;
-
-exports.getAllPointsOfInterests = function (req, res) {
-    dbUtil.execQuery("select * from Points")
+router.get('/', (req, res) => {
+    dbUtil.execQuery("select * from points")
         .then((response) => {
-            console.log(response);
-            // res.send(response);
             res.send(response);
         })
         .catch((err) => {
             console.log(err);
+            res.status(500).send({ error: err });
         })
-}
+})
 
-exports.getPointsByUserCategory = function (req, res) {
-    var user_id = req.params.id;
-
-    dbUtil.execQuery("select * from users")
-        .then((response) => {
-            console.log(response);
-            res.send(response);
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-}
-
-exports.getRandomPointOI = function (req, res) {
+router.get('/random/:num', (req, res) => {
     var amount = parseInt(req.params.num);
 
-    dbUtil.execQuery("select * from users")
+    dbUtil.execQuery("select * from points")
         .then((response) => {
-            console.log(response);
             res.send(response);
         })
         .catch((err) => {
             console.log(err);
+            res.status(500).send({ error: err });
         })
-}
+})
 
-exports.getPointByName = function (req, res) {
+router.get('/:name', (req, res) => {
     var name = req.params.name;
 
-    dbUtil.execQuery("select * from users")
+    dbUtil.execQuery("select * from points")
         .then((response) => {
-            console.log(response);
             res.send(response);
         })
         .catch((err) => {
             console.log(err);
+            res.status(500).send({ error: err });
         })
-}
+})
 
-exports.addReviewToPoint = function (req, res) {
-    var id = parseInt(req.body.point_id);
+router.post('/review', (req, res) => {
+    var point_id = parseInt(req.body.point_id);
     var review = req.body.review;
 
-    dbUtil.execQuery("select * from users")
+    dbUtil.execQuery("select * from points")
         .then((response) => {
-            console.log(response);
             res.send(response);
         })
         .catch((err) => {
             console.log(err);
+            res.status(500).send({ error: err });
         })
-}
+})
 
-exports.updateReviewToPoint = function (req, res) {
-    var id = parseInt(req.body.point_id);
+router.put('/review', (req, res) => {
+    var point_id = parseInt(req.body.point_id);
     var review = req.body.review;
 
-    dbUtil.execQuery("select * from users")
+    dbUtil.execQuery("select * from points")
         .then((response) => {
-            console.log(response);
             res.send(response);
         })
         .catch((err) => {
             console.log(err);
+            res.status(500).send({ error: err });
         })
-}
+})
 
-exports.updatePointViews = function (req, res) {
-    var id = parseInt(req.body.point_id);
+router.put('/views', (req, res) => {
+    var point_id = parseInt(req.body.point_id);
 
-    dbUtil.execQuery("select * from users")
+    dbUtil.execQuery("select * from points")
         .then((response) => {
-            console.log(response);
             res.send(response);
         })
         .catch((err) => {
             console.log(err);
+            res.status(500).send({ error: err });
         })
-}
+})
+
+module.exports = router;
