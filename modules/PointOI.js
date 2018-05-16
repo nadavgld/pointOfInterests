@@ -5,37 +5,14 @@ var router = express.Router();
 
 var dbUtil = require('../DButils');
 var Tokens = require('./Token');
-
-function getReviewsToPoints(Points, amount) {
-    return new Promise((resolve, reject) => {
-
-        for (var i in Points) {
-            const x = i;
-            var point = Points[x];
-
-            dbUtil.execQuery(`select top ${amount} * from reviews where p_id = '${point.id}' order by timestamp desc`)
-                .then((response) => {
-                    Points[x].reviews = response;
-
-                    if (x == Points.length - 1) {
-                        resolve(Points);
-                    }
-
-                })
-                .catch((err) => {
-                    console.log(err);
-                    // res.status(500).send({ error: err });
-                })
-        }
-    });
-}
+var util = require('./util');
 
 router.get('/', (req, res) => {
     dbUtil.execQuery("select * from points")
         .then((response) => {
-            getReviewsToPoints(response, 2).then((response)=>{
+            util.getLatestReviewsToPoints(response, 2).then((response) => {
                 res.send(response);
-            }).catch((err)=>{
+            }).catch((err) => {
                 console.log(err);
             })
         })
@@ -51,7 +28,11 @@ router.get('/random/:num', (req, res) => {
 
     dbUtil.execQuery(`select top ${num} * from points where rating >= '${rating}' order by NEWID()`)
         .then((response) => {
-            res.send(response);
+            util.getLatestReviewsToPoints(response, 2).then((response) => {
+                res.send(response);
+            }).catch((err) => {
+                console.log(err);
+            })
         })
         .catch((err) => {
             console.log(err);
@@ -65,7 +46,11 @@ router.get('/:name', (req, res) => {
 
     dbUtil.execQuery("select * from points where LOWER(name) like '%" + name + "%'")
         .then((response) => {
-            res.send(response);
+            util.getLatestReviewsToPoints(response, 0).then((response)=>{
+                res.send(response);
+            }).catch((err)=>{
+                console.log(err);
+            })
         })
         .catch((err) => {
             console.log(err);

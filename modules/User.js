@@ -5,15 +5,25 @@ var router = express.Router();
 
 var dbUtil = require('../DButils');
 var Tokens = require('./Token');
+var util = require('./util');
 
 router.post('/', (req, res) => {
     var newUser = req.body;
+    var category = req.body.category;
 
     dbUtil.execQuery(`insert into users values(
         '${newUser.firstName}','${newUser.lastName}','${newUser.city}','${newUser.country}','${newUser.email}','${newUser.question}','${newUser.answer}','${newUser.username}','${newUser.password}'
         )`)
         .then((response) => {
-            res.send(response);
+            dbUtil.execQuery(`select id from users where email = '${newUser.email}' and username = '${newUser.username}' `)
+            .then((response2) => {
+                var id = response2[0].id;
+                util.insertUserCategory(category,id).then((response)=>{
+                    res.sendStatus(200);
+                }).catch((err)=>{
+                    console.log(err);
+                })
+            })
         })
         .catch((err) => {
             console.log(err);
@@ -21,8 +31,11 @@ router.post('/', (req, res) => {
         })
 })
 
-router.get('/:user_id/point', (req, res) => {
+router.get('/:user_id/point/:amount', (req, res) => {
     var user_id = parseInt(req.params.user_id);
+    var amount = parseInt(req.params.amount);
+
+    var top = amount == 0 ? "" : `top ${amount}`;
 
     var token = Tokens.checkToken(req)
         .then((response) => {
@@ -33,9 +46,13 @@ router.get('/:user_id/point', (req, res) => {
         })
 
     var query = () => {
-        dbUtil.execQuery("select * from points where category_id in (select c_id from usercategory where u_id = '" + user_id + "')")
+        dbUtil.execQuery("select "+top+" * from points where category_id in (select c_id from usercategory where u_id = '" + user_id + "') order by NEWID()")
             .then((response) => {
-                res.send(response);
+                util.getLatestReviewsToPoints(response, 2).then((response)=>{
+                    res.send(response);
+                }).catch((err)=>{
+                    console.log(err);
+                })
             })
             .catch((err) => {
                 console.log(err);
