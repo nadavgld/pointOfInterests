@@ -7,33 +7,37 @@ var dbUtil = require('../DButils');
 var Tokens = require('./Token');
 
 function getReviewsToPoints(Points, amount) {
-    for (var i in Points) {
-        const x = i;
-        var point = Points[x];
+    return new Promise((resolve, reject) => {
 
-        dbUtil.execQuery(`select top ${amount} * from reviews where p_id = '${point.id}' order by timestamp desc`)
-            .then((response) => {
-                point.reviews = response;
+        for (var i in Points) {
+            const x = i;
+            var point = Points[x];
 
-                console.log(x)
-                if (x == Points.length - 1){
-                    console.log("done")
-                    return Points;
-                }
+            dbUtil.execQuery(`select top ${amount} * from reviews where p_id = '${point.id}' order by timestamp desc`)
+                .then((response) => {
+                    Points[x].reviews = response;
 
-            })
-            .catch((err) => {
-                console.log(err);
-                // res.status(500).send({ error: err });
-            })
-    }
+                    if (x == Points.length - 1) {
+                        resolve(Points);
+                    }
 
+                })
+                .catch((err) => {
+                    console.log(err);
+                    // res.status(500).send({ error: err });
+                })
+        }
+    });
 }
 
 router.get('/', (req, res) => {
     dbUtil.execQuery("select * from points")
         .then((response) => {
-            res.send(getReviewsToPoints(response, 2));
+            getReviewsToPoints(response, 2).then((response)=>{
+                res.send(response);
+            }).catch((err)=>{
+                console.log(err);
+            })
         })
         .catch((err) => {
             console.log(err);
