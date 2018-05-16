@@ -15,9 +15,10 @@ router.get('/', (req, res) => {
 })
 
 router.get('/random/:num', (req, res) => {
-    var amount = parseInt(req.params.num);
+    var num = parseInt(req.params.num);
+    const rating = 2;
 
-    dbUtil.execQuery("select * from points")
+    dbUtil.execQuery(`select top ${num} * from points where rating >= '${rating}' order by NEWID()`)
         .then((response) => {
             res.send(response);
         })
@@ -28,9 +29,9 @@ router.get('/random/:num', (req, res) => {
 })
 
 router.get('/:name', (req, res) => {
-    var name = req.params.name;
+    var name = req.params.name.trim().toLowerCase();
 
-    dbUtil.execQuery("select * from points")
+    dbUtil.execQuery("select * from points where LOWER(name) like '%" + name + "%'")
         .then((response) => {
             res.send(response);
         })
@@ -44,7 +45,9 @@ router.post('/review', (req, res) => {
     var point_id = parseInt(req.body.point_id);
     var review = req.body.review;
 
-    dbUtil.execQuery("select * from points")
+    //TIMESTAMP IS IN UTC (-3 HOURS)
+    dbUtil.execQuery(`insert into reviews(u_id,p_id,description,timestamp,rating)
+                    values ('${review.u_id}','${point_id}','${review.description}',CURRENT_TIMESTAMP,'${review.rating}')`)
         .then((response) => {
             res.send(response);
         })
@@ -54,11 +57,14 @@ router.post('/review', (req, res) => {
         })
 })
 
+//WITH REVIEW ID
 router.put('/review', (req, res) => {
     var point_id = parseInt(req.body.point_id);
     var review = req.body.review;
 
-    dbUtil.execQuery("select * from points")
+    dbUtil.execQuery(`update reviews set
+                    description = '${review.description}', timestamp = CURRENT_TIMESTAMP ,rating = '${review.rating}'
+                    where p_id = '${point_id}' and id = '${review.id}'`)
         .then((response) => {
             res.send(response);
         })
@@ -71,9 +77,22 @@ router.put('/review', (req, res) => {
 router.put('/views', (req, res) => {
     var point_id = parseInt(req.body.point_id);
 
-    dbUtil.execQuery("select * from points")
+    dbUtil.execQuery(`select views from points where id = '${point_id}'`)
         .then((response) => {
-            res.send(response);
+
+            if (response[0]) {
+                var views = parseInt(response[0].views);
+
+                dbUtil.execQuery(`update points set views = ${views + 1} where id = '${point_id}'`)
+                    .then((response2) => {
+                        res.sendStatus(200);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        res.status(500).send({ error: err });
+                    })
+            } else
+                res.sendStatus(500);
         })
         .catch((err) => {
             console.log(err);

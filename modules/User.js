@@ -6,23 +6,23 @@ var dbUtil = require('../DButils');
 router.post('/', (req, res) => {
     var newUser = req.body;
 
-    dbUtil.execQuery("select * from users")
+    dbUtil.execQuery(`insert into users values(
+        '${newUser.firstName}','${newUser.lastName}','${newUser.city}','${newUser.country}','${newUser.email}','${newUser.question}','${newUser.answer}','${newUser.username}','${newUser.password}'
+        )`)
         .then((response) => {
-            // console.log(response);
             res.send(response);
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).send({ error: err });            
+            res.status(500).send({ error: err });
         })
 })
 
-router.get('/:id/point', (req, res) => {
+router.get('/:user_id/point', (req, res) => {
     var user_id = parseInt(req.params.user_id);
 
-    dbUtil.execQuery("select * from users")
+    dbUtil.execQuery("select * from points where category_id in (select c_id from usercategory where u_id = '" + user_id + "')")
         .then((response) => {
-            // console.log(response);
             res.send(response);
         })
         .catch((err) => {
@@ -36,70 +36,71 @@ router.get('/:email/question', (req, res) => {
 
     dbUtil.execQuery(`select question from users where email = '${email}' `)
         .then((response) => {
-            // console.log(response);
             res.send(response);
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).send({ error: err });            
+            res.status(500).send({ error: err });
         })
 })
 
 router.post('/password', (req, res) => {
     var user_id = parseInt(req.body.user_id);
-    var answer = req.body.answer;
+    var answer = req.body.answer.trim().toLowerCase();
 
-    dbUtil.execQuery("select * from users")
+    dbUtil.execQuery(`select password from users where id = '${user_id}' and answer = LOWER('${answer}')`)
         .then((response) => {
-            // console.log(response);
-            res.send(response);
+            res.send(response[0]);
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).send({ error: err });            
+            res.status(500).send({ error: err });
         })
 })
 
 router.post('/login', (req, res) => {
-    var email = req.body.email;
+    var username = req.body.username;
     var password = req.body.password;
 
-    dbUtil.execQuery("select * from users")
+    dbUtil.execQuery(`select id from users where username = '${username}' and password = '${password}'`)
         .then((response) => {
-            // console.log(response);
-            res.send(response);
+            if (response.length == 0) {
+                res.status(500).send({ error: 'Username and password are not match' });
+            }
+            else {
+                //TOKEN
+                res.send(response[0]);
+            }
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).send({ error: err });            
+            res.status(500).send({ error: err });
         })
 })
 
 router.get('/:user_id/category', (req, res) => {
     var user_id = parseInt(req.params.user_id);
 
-    dbUtil.execQuery(`select * from users`)
+    dbUtil.execQuery("select * from categories where id in (select c_id from usercategory where u_id = '" + user_id + "')")
         .then((response) => {
-            // console.log(response);
             res.send(response);
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).send({ error: err });            
+            res.status(500).send({ error: err });
         })
 })
 
 router.get('/:user_id/favorite', (req, res) => {
     var user_id = parseInt(req.params.user_id);
 
-    dbUtil.execQuery(`select * from users`)
+    dbUtil.execQuery(`select * from UserFavoritePoint where u_id = '${user_id}' and active = '1' order by fav_order asc`)
         .then((response) => {
-            // console.log(response);
             res.send(response);
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).send({ error: err });            
+            res.status(500).send({ error: err });
         })
 })
 
@@ -107,14 +108,13 @@ router.get('/:user_id/latest/:amount', (req, res) => {
     var user_id = parseInt(req.params.user_id);
     var amount = parseInt(req.params.amount);
 
-    dbUtil.execQuery(`select * from users`)    
+    dbUtil.execQuery(`select top ${amount} * from UserFavoritePoint where u_id = '${user_id}' and active = '1' order by date desc`)
         .then((response) => {
-            // console.log(response);
             res.send(response);
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).send({ error: err });            
+            res.status(500).send({ error: err });
         })
 })
 
@@ -122,29 +122,47 @@ router.get('/checkExistence/:email/:username', (req, res) => {
     var email = req.params.email;
     var username = req.params.username;
 
-    dbUtil.execQuery(`select * from users`)    
+    dbUtil.execQuery(`select id from users where email = '${email}' or username = '${username}'`)
         .then((response) => {
-            // console.log(response);
-            res.send(response);
+
+            if (response.length == 0) {
+                res.send(false);
+            } else {
+                res.send(true);
+            }
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).send({ error: err });            
+            res.status(500).send({ error: err });
         })
 })
 
 router.put('/favorite', (req, res) => {
     var user_id = parseInt(req.body.user_id);
-    var favoritePoints = req.body.fp;
+    var fps = req.body.fp;
 
-    dbUtil.execQuery("select * from users")
+    dbUtil.execQuery("update UserFavoritePoint set active = '0', fav_order = '0' where u_id = '" + user_id + "'")
         .then((response) => {
-            // console.log(response);
-            res.send(response);
+            for (var i in fps) {
+                var fp = fps[i];
+
+                //USE THIS DATE FUNCTION IN CLIENT WHEN FAVORITE A POINT (!!)
+                var d = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+                dbUtil.execQuery(`update UserFavoritePoint set active = '1', fav_order = '${fp.fav_order}', date = '${d}'
+                                where u_id ='${user_id}' and p_id = '${fp.point_id}'`)
+                    .then((response_1) => {
+                        res.sendStatus(200);
+                    })
+                    .catch((err_1) => {
+                        console.log(err_1);
+                        res.status(500).send({ error: err_1 });
+                    })
+            }
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).send({ error: err });            
+            res.status(500).send({ error: err });
         })
 })
 
