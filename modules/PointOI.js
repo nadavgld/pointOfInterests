@@ -1,12 +1,39 @@
 var express = require('express');
+var jwt = require('jsonwebtoken');
+
 var router = express.Router();
 
 var dbUtil = require('../DButils');
+var Tokens = require('./Token');
+
+function getReviewsToPoints(Points, amount) {
+    for (var i in Points) {
+        const x = i;
+        var point = Points[x];
+
+        dbUtil.execQuery(`select top ${amount} * from reviews where p_id = '${point.id}' order by timestamp desc`)
+            .then((response) => {
+                point.reviews = response;
+
+                console.log(x)
+                if (x == Points.length - 1){
+                    console.log("done")
+                    return Points;
+                }
+
+            })
+            .catch((err) => {
+                console.log(err);
+                // res.status(500).send({ error: err });
+            })
+    }
+
+}
 
 router.get('/', (req, res) => {
     dbUtil.execQuery("select * from points")
         .then((response) => {
-            res.send(response);
+            res.send(getReviewsToPoints(response, 2));
         })
         .catch((err) => {
             console.log(err);
@@ -28,6 +55,7 @@ router.get('/random/:num', (req, res) => {
         })
 })
 
+
 router.get('/:name', (req, res) => {
     var name = req.params.name.trim().toLowerCase();
 
@@ -45,16 +73,27 @@ router.post('/review', (req, res) => {
     var point_id = parseInt(req.body.point_id);
     var review = req.body.review;
 
-    //TIMESTAMP IS IN UTC (-3 HOURS)
-    dbUtil.execQuery(`insert into reviews(u_id,p_id,description,timestamp,rating)
-                    values ('${review.u_id}','${point_id}','${review.description}',CURRENT_TIMESTAMP,'${review.rating}')`)
+    var token = Tokens.checkToken(req)
         .then((response) => {
-            res.send(response);
+            query()
         })
         .catch((err) => {
-            console.log(err);
-            res.status(500).send({ error: err });
+            res.status(500).send("Invalid Token")
         })
+
+
+    //TIMESTAMP IS IN UTC (-3 HOURS)
+    var query = () => {
+        dbUtil.execQuery(`insert into reviews(u_id,p_id,description,timestamp,rating)
+                    values ('${review.u_id}','${point_id}','${review.description}',CURRENT_TIMESTAMP,'${review.rating}')`)
+            .then((response) => {
+                res.send(response);
+            })
+            .catch((err) => {
+                console.log(err);
+                res.status(500).send({ error: err });
+            })
+    }
 })
 
 //WITH REVIEW ID
@@ -62,16 +101,26 @@ router.put('/review', (req, res) => {
     var point_id = parseInt(req.body.point_id);
     var review = req.body.review;
 
-    dbUtil.execQuery(`update reviews set
-                    description = '${review.description}', timestamp = CURRENT_TIMESTAMP ,rating = '${review.rating}'
-                    where p_id = '${point_id}' and id = '${review.id}'`)
+    var token = Tokens.checkToken(req)
         .then((response) => {
-            res.send(response);
+            query()
         })
         .catch((err) => {
-            console.log(err);
-            res.status(500).send({ error: err });
+            res.status(500).send("Invalid Token")
         })
+
+    var query = () => {
+        dbUtil.execQuery(`update reviews set
+                    description = '${review.description}', timestamp = CURRENT_TIMESTAMP ,rating = '${review.rating}'
+                    where p_id = '${point_id}' and id = '${review.id}'`)
+            .then((response) => {
+                res.send(response);
+            })
+            .catch((err) => {
+                console.log(err);
+                res.status(500).send({ error: err });
+            })
+    }
 })
 
 router.put('/views', (req, res) => {
