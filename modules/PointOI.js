@@ -46,9 +46,9 @@ router.get('/:name', (req, res) => {
 
     dbUtil.execQuery("select * from points where LOWER(name) like '%" + name + "%'")
         .then((response) => {
-            util.getLatestReviewsToPoints(response, 0).then((response)=>{
+            util.getLatestReviewsToPoints(response, 0).then((response) => {
                 res.send(response);
-            }).catch((err)=>{
+            }).catch((err) => {
                 console.log(err);
             })
         })

@@ -16,14 +16,14 @@ router.post('/', (req, res) => {
         )`)
         .then((response) => {
             dbUtil.execQuery(`select id from users where email = '${newUser.email}' and username = '${newUser.username}' `)
-            .then((response2) => {
-                var id = response2[0].id;
-                util.insertUserCategory(category,id).then((response)=>{
-                    res.sendStatus(200);
-                }).catch((err)=>{
-                    console.log(err);
+                .then((response2) => {
+                    var id = response2[0].id;
+                    util.insertUserCategory(category, id).then((response) => {
+                        res.sendStatus(200);
+                    }).catch((err) => {
+                        console.log(err);
+                    })
                 })
-            })
         })
         .catch((err) => {
             console.log(err);
@@ -46,11 +46,11 @@ router.get('/:user_id/point/:amount', (req, res) => {
         })
 
     var query = () => {
-        dbUtil.execQuery("select "+top+" * from points where category_id in (select c_id from usercategory where u_id = '" + user_id + "') order by NEWID()")
+        dbUtil.execQuery("select " + top + " * from points where category_id in (select c_id from usercategory where u_id = '" + user_id + "') order by NEWID()")
             .then((response) => {
-                util.getLatestReviewsToPoints(response, 2).then((response)=>{
+                util.getLatestReviewsToPoints(response, 2).then((response) => {
                     res.send(response);
-                }).catch((err)=>{
+                }).catch((err) => {
                     console.log(err);
                 })
             })
@@ -105,7 +105,7 @@ router.post('/login', (req, res) => {
                 }
 
                 var token = Tokens.generateToken(payload, "1d");
-                res.send(token);
+                res.send({"token":token});
             }
         })
         .catch((err) => {
