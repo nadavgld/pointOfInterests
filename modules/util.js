@@ -3,6 +3,8 @@ var dbUtil = require('../DButils');
 exports.getLatestReviewsToPoints = function (Points, amount) {
     var top = amount == 0 ? "" : `top ${amount}`;
     return new Promise((resolve, reject) => {
+        if (Points.length == 0)
+            resolve([]);
 
         for (var i in Points) {
             const x = i;
@@ -27,6 +29,8 @@ exports.getLatestReviewsToPoints = function (Points, amount) {
 
 exports.insertUserCategory = function (categories, uid) {
     return new Promise((resolve, reject) => {
+        if (categories.length == 0)
+            resolve();
 
         for (var i in categories) {
             const x = i;
