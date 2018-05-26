@@ -22,8 +22,8 @@ router.get('/', (req, res) => {
         })
 })
 
-router.get('/random/:num', (req, res) => {
-    var num = parseInt(req.params.num);
+router.get('/random/:amount', (req, res) => {
+    var num = parseInt(req.params.amount);
     const rating = 2;
 
     dbUtil.execQuery(`select top ${num} * from points where rating >= '${rating}' order by NEWID()`)
@@ -76,11 +76,20 @@ router.post('/review', (req, res) => {
         dbUtil.execQuery(`insert into reviews(u_id,p_id,description,timestamp,rating)
                     values ('${review.u_id}','${point_id}','${review.description}',CURRENT_TIMESTAMP,'${review.rating}')`)
             .then((response) => {
-                res.send(response);
+                dbUtil.execQuery(`select AVG(cast(rating as Float)) as 'avgRate' from reviews where p_id = '${point_id}'`)
+                .then((avg) => {
+                    dbUtil.execQuery(`update points set
+                    rating = '${avg[0].avgRate}'
+                    where id = '${point_id}'`)
+                        .then((response) => {
+                            console.log(response);
+                        })
+                    res.send(avg);
+                })
             })
             .catch((err) => {
                 console.log(err);
-                res.status(500).send({ error: err });
+                res.status(500).send({ 'err_msg': err });
             })
     }
 })
@@ -100,10 +109,20 @@ router.put('/review', (req, res) => {
 
     var query = () => {
         dbUtil.execQuery(`update reviews set
-                    description = '${review.description}', timestamp = CURRENT_TIMESTAMP ,rating = '${review.rating}'
+                    description = '${review.description}', timestamp = CURRENT_TIMESTAMP ,rating = '${parseInt(review.rating)}'
                     where p_id = '${point_id}' and id = '${review.id}'`)
             .then((response) => {
-                res.send(response);
+
+                dbUtil.execQuery(`select AVG(cast(rating as Float)) as 'avgRate' from reviews where p_id = '${point_id}'`)
+                    .then((avg) => {
+                        dbUtil.execQuery(`update points set
+                        rating = '${avg[0].avgRate}'
+                        where id = '${point_id}'`)
+                            .then((response) => {
+                                console.log(response);
+                            })
+                        res.send(avg);
+                    })
             })
             .catch((err) => {
                 console.log(err);
@@ -123,7 +142,7 @@ router.put('/views', (req, res) => {
 
                 dbUtil.execQuery(`update points set views = ${views + 1} where id = '${point_id}'`)
                     .then((response2) => {
-                        res.sendStatus(200);
+                        res.send({'currentViews': (views + 1)});
                     })
                     .catch((err) => {
                         console.log(err);
