@@ -1,0 +1,79 @@
+<html ng-app="POI-app">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Points Of Interests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css" />
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="">
+
+    <main role="main">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <i class="fas fa-paper-plane mr-1 text-success"></i>
+            <a class="navbar-brand text-success" href="#">POI - N.Y.C</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                <ul class="navbar-nav mr-auto ml-1">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#!/">
+                            Home
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#!/">
+                            Link 2
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#!/">
+                            Link 3
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <form class="form-inline my-2 my-lg-0">
+                            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                        </form>
+                    </li>
+
+                </ul>
+
+                <ul class="navbar-nav pull-right ml-auto mr-1">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#!/login">
+                            Login/Register
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div ng-view class="container"></div>
+    </main>
+
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/bower_components/angular/angular.js"></script>
+    <script src="/bower_components/angular-route/angular-route.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="/app.js"></script>
+    <script src="/controllers/homepage.js"></script>
+    <script src="/controllers/notFound.js"></script>
+</body>
+
+</html>

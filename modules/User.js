@@ -62,29 +62,29 @@ router.get('/:user_id/point/:amount', (req, res) => {
     }
 })
 
-function filterSameCategory(arr, num){
+function filterSameCategory(arr, num) {
     console.log(arr);
     var new_arr = [];
     var times = 0;
 
-    for(i in arr){
+    for (i in arr) {
         var item = arr[i];
 
         var isIn = false;
-        for(j in new_arr){
+        for (j in new_arr) {
             var new_item = new_arr[j];
-            
-            if(new_item.category_id == item.category_id){
+
+            if (new_item.category_id == item.category_id) {
                 isIn = true;
                 break;
             }
         }
 
-        if(!isIn){
+        if (!isIn) {
             new_arr.push(item);
             times++;
 
-            if(times == num)
+            if (times == num)
                 break;
         }
     }
@@ -173,6 +173,20 @@ router.get('/:user_id/category', (req, res) => {
                 res.status(500).send({ error: err });
             })
     }
+})
+
+router.get('/:user_id/name', (req, res) => {
+    var user_id = parseInt(req.params.user_id);
+
+    dbUtil.execQuery("select username from users where id = '" + user_id + "'")
+        .then((response) => {
+            res.send(response[0]);
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send({ error: err });
+        })
+
 })
 
 router.get('/:user_id/favorite', (req, res) => {

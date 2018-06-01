@@ -1,0 +1,29 @@
+.nav-item{
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.nav-link{
+    transition: 0.3s ease-in-out;
+    /* border-radius: .3em; */
+    border-bottom: 2px solid transparent;
+}
+
+.nav-link:hover{
+    color: rgba(0, 0, 0, 0.7);
+    /* background: var(--success); */
+    border-bottom: 2px solid var(--success);
+}
+
+.card{
+    height: 75vh;
+}
+
+.card-header{
+    height: 10vh;
+}
+
+.card-img-top{
+    max-width: 300px;
+    max-height: 200px;
+}
