@@ -31,6 +31,7 @@ router.post('/', (req, res) => {
         })
 })
 
+//CHANGE API - GET CATEGORY NAME AS WELL
 router.get('/:user_id/point/:amount', (req, res) => {
     var user_id = parseInt(req.params.user_id);
     var amount = parseInt(req.params.amount);
@@ -63,7 +64,6 @@ router.get('/:user_id/point/:amount', (req, res) => {
 })
 
 function filterSameCategory(arr, num) {
-    console.log(arr);
     var new_arr = [];
     var times = 0;
 
@@ -98,205 +98,216 @@ router.get('/:email/question', (req, res) => {
     dbUtil.execQuery(`select question,question2 from users where email = '${email}' `)
         .then((response) => {
             if (response.length == 0)
-                res.send({ "questions": response });
-            else
                 res.send({ "error": "Email cannot be found" })
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send({ error: err });
-        })
-})
-
-router.post('/password', (req, res) => {
-    var user_id = parseInt(req.body.user_id);
-    var answer = req.body.answer.trim().toLowerCase();
-    var answer2 = req.body.answer2.trim().toLowerCase();
-
-    dbUtil.execQuery(`select password from users where id = '${user_id}' and answer = LOWER('${answer}') and answer2 = LOWER('${answer2}')`)
-        .then((response) => {
-            if (response[0])
-                res.send(response[0]);
             else
-                res.send({ "error": "Answers are not match" })
+                res.send({ "questions": response });
         })
         .catch((err) => {
             console.log(err);
             res.status(500).send({ error: err });
         })
 })
+
+router.get('/token/:token', (req, res) => {
+    Tokens.getDataFromToken(req.params.token).then((response)=>{
+        res.send(response.payload);
+    })
+})
+
+//CHANGE API TO EMAIL
+router.post('/password', (req, res) => {
+        var email = req.body.email;
+        var answer = req.body.answer.trim().toLowerCase();
+        var answer2 = req.body.answer2.trim().toLowerCase();
+
+        dbUtil.execQuery(`select password from users where email = '${email}' and answer = LOWER('${answer}') and answer2 = LOWER('${answer2}')`)
+            .then((response) => {
+                if (response[0])
+                    res.send(response[0]);
+                else
+                    res.send({ "error": "Answers are not match" })
+            })
+            .catch((err) => {
+                console.log(err);
+                res.status(500).send({ error: err });
+            })
+    })
 
 router.post('/login', (req, res) => {
-    var username = req.body.username;
-    var password = req.body.password;
+        var username = req.body.username;
+        var password = req.body.password;
 
-    dbUtil.execQuery(`select id from users where username = '${username}' and password = '${password}'`)
-        .then((response) => {
-            if (response.length == 0) {
-                res.status(500).send({ error: 'Username and password are not match' });
-            }
-            else {
-                //TOKEN
-                var payload = {
-                    userName: username,
-                    id: response[0].id
+        dbUtil.execQuery(`select id from users where username = '${username}' and password = '${password}'`)
+            .then((response) => {
+                if (response.length == 0) {
+                    res.status(500).send({ error: 'Username and password are not match' });
                 }
+                else {
+                    //TOKEN
+                    var payload = {
+                        userName: username,
+                        id: response[0].id
+                    }
 
-                var token = Tokens.generateToken(payload, "1d");
-                res.send({ "token": token });
-            }
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send({ error: err });
-        })
-})
+                    var token = Tokens.generateToken(payload, "1d");
+                    res.send({ "token": token });
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                res.status(500).send({ error: err });
+            })
+    })
 
 router.get('/:user_id/category', (req, res) => {
-    var user_id = parseInt(req.params.user_id);
+        var user_id = parseInt(req.params.user_id);
 
-    var token = Tokens.checkToken(req)
-        .then((response) => {
-            query()
-        })
-        .catch((err) => {
-            res.status(500).send("Invalid Token")
-        })
-
-    var query = () => {
-        dbUtil.execQuery("select * from categories where id in (select c_id from usercategory where u_id = '" + user_id + "')")
+        var token = Tokens.checkToken(req)
             .then((response) => {
-                res.send(response);
+                query()
             })
             .catch((err) => {
-                console.log(err);
-                res.status(500).send({ error: err });
+                res.status(500).send("Invalid Token")
             })
-    }
-})
+
+        var query = () => {
+            dbUtil.execQuery("select * from categories where id in (select c_id from usercategory where u_id = '" + user_id + "')")
+                .then((response) => {
+                    res.send(response);
+                })
+                .catch((err) => {
+                    console.log(err);
+                    res.status(500).send({ error: err });
+                })
+        }
+    })
 
 router.get('/:user_id/name', (req, res) => {
-    var user_id = parseInt(req.params.user_id);
+        var user_id = parseInt(req.params.user_id);
 
-    dbUtil.execQuery("select username from users where id = '" + user_id + "'")
-        .then((response) => {
-            res.send(response[0]);
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send({ error: err });
-        })
+        dbUtil.execQuery("select username from users where id = '" + user_id + "'")
+            .then((response) => {
+                res.send(response[0]);
+            })
+            .catch((err) => {
+                console.log(err);
+                res.status(500).send({ error: err });
+            })
 
-})
+    })
 
 router.get('/:user_id/favorite', (req, res) => {
-    var user_id = parseInt(req.params.user_id);
+        var user_id = parseInt(req.params.user_id);
 
-    var token = Tokens.checkToken(req)
-        .then((response) => {
-            query()
-        })
-        .catch((err) => {
-            res.status(500).send("Invalid Token")
-        })
-
-    var query = () => {
-
-        dbUtil.execQuery(`select * from UserFavoritePoint where u_id = '${user_id}' and active = '1' order by fav_order asc`)
+        var token = Tokens.checkToken(req)
             .then((response) => {
-                res.send(response);
+                query()
             })
             .catch((err) => {
-                console.log(err);
-                res.status(500).send({ error: err });
+                res.status(500).send("Invalid Token")
             })
-    }
-})
+
+        var query = () => {
+
+            dbUtil.execQuery(`select * from UserFavoritePoint where u_id = '${user_id}' and active = '1' order by fav_order asc`)
+                .then((response) => {
+                    res.send(response);
+                })
+                .catch((err) => {
+                    console.log(err);
+                    res.status(500).send({ error: err });
+                })
+        }
+    })
 
 router.get('/:user_id/latest/:amount', (req, res) => {
-    var user_id = parseInt(req.params.user_id);
-    var amount = parseInt(req.params.amount);
+        var user_id = parseInt(req.params.user_id);
+        var amount = parseInt(req.params.amount);
 
-    var token = Tokens.checkToken(req)
-        .then((response) => {
-            query()
-        })
-        .catch((err) => {
-            res.status(500).send("Invalid Token")
-        })
-
-    var query = () => {
-
-        dbUtil.execQuery(`select top ${amount} * from UserFavoritePoint where u_id = '${user_id}' and active = '1' order by date desc`)
+        var token = Tokens.checkToken(req)
             .then((response) => {
-                res.send(response);
+                query()
             })
             .catch((err) => {
-                console.log(err);
-                res.status(500).send({ error: err });
+                res.status(500).send("Invalid Token")
             })
-    }
-})
+
+        var query = () => {
+
+            dbUtil.execQuery(`select top ${amount} * from UserFavoritePoint where u_id = '${user_id}' and active = '1' order by date desc`)
+                .then((response) => {
+                    util.getPointById(response,0).then((response) => {
+                        res.send(response);
+                    }).catch((err) => {
+                        console.log(err);
+                    })
+                })
+                .catch((err) => {
+                    console.log(err);
+                    res.status(500).send({ error: err });
+                })
+        }
+    })
 
 router.get('/checkExistence/:email/:username', (req, res) => {
-    var email = req.params.email;
-    var username = req.params.username;
+        var email = req.params.email;
+        var username = req.params.username;
 
-    dbUtil.execQuery(`select id from users where email = '${email}' or username = '${username}'`)
-        .then((response) => {
-
-            if (response.length == 0) {
-                res.send({ 'isExists': false });
-            } else {
-                res.send({ 'isExists': true });
-            }
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send({ error: err });
-        })
-})
-
-router.put('/favorite', (req, res) => {
-    var user_id = parseInt(req.body.user_id);
-    var fps = req.body.fp;
-
-    var token = Tokens.checkToken(req)
-        .then((response) => {
-            query()
-        })
-        .catch((err) => {
-            res.status(500).send("Invalid Token")
-        })
-
-    var query = () => {
-        dbUtil.execQuery("update UserFavoritePoint set active = '0', fav_order = '0' where u_id = '" + user_id + "'")
+        dbUtil.execQuery(`select id from users where email = '${email}' or username = '${username}'`)
             .then((response) => {
-                const total = fps.length - 1;
-                for (var i in fps) {
-                    const currentIndex = i;
-                    var fp = fps[i];
 
-                    //USE THIS DATE FUNCTION IN CLIENT WHEN FAVORITE A POINT (!!)
-                    var d = new Date().toISOString().slice(0, 19).replace('T', ' ');
-
-                    dbUtil.execQuery(`if exists (select * from UserFavoritePoint where u_id = '${user_id}' and p_id = '${fp.point_id}') begin update UserFavoritePoint set active = '1', fav_order = '${fp.fav_order}', date = '${d}'
-                                where u_id ='${user_id}' and p_id = '${fp.point_id}' end else begin insert into UserFavoritePoint values('${fp.point_id}', '${user_id}', '1', '${d}', '${fp.fav_order}') end`)
-                        .then((response_1) => {
-                            if (total == currentIndex)
-                                res.sendStatus(200);
-                        })
-                        .catch((err_1) => {
-                            console.log(err_1);
-                            res.status(500).send({ error: err_1 });
-                        })
+                if (response.length == 0) {
+                    res.send({ 'isExists': false });
+                } else {
+                    res.send({ 'isExists': true });
                 }
             })
             .catch((err) => {
                 console.log(err);
                 res.status(500).send({ error: err });
             })
-    }
-})
+    })
+
+router.put('/favorite', (req, res) => {
+        var user_id = parseInt(req.body.user_id);
+        var fps = req.body.fp;
+
+        var token = Tokens.checkToken(req)
+            .then((response) => {
+                query()
+            })
+            .catch((err) => {
+                res.status(500).send("Invalid Token")
+            })
+
+        var query = () => {
+            dbUtil.execQuery("update UserFavoritePoint set active = '0', fav_order = '0' where u_id = '" + user_id + "'")
+                .then((response) => {
+                    const total = fps.length - 1;
+                    for (var i in fps) {
+                        const currentIndex = i;
+                        var fp = fps[i];
+
+                        //USE THIS DATE FUNCTION IN CLIENT WHEN FAVORITE A POINT (!!)
+                        var d = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+                        dbUtil.execQuery(`if exists (select * from UserFavoritePoint where u_id = '${user_id}' and p_id = '${fp.point_id}') begin update UserFavoritePoint set active = '1', fav_order = '${fp.fav_order}', date = '${d}'
+                                where u_id ='${user_id}' and p_id = '${fp.point_id}' end else begin insert into UserFavoritePoint values('${fp.point_id}', '${user_id}', '1', '${d}', '${fp.fav_order}') end`)
+                            .then((response_1) => {
+                                if (total == currentIndex)
+                                    res.sendStatus(200);
+                            })
+                            .catch((err_1) => {
+                                console.log(err_1);
+                                res.status(500).send({ error: err_1 });
+                            })
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                    res.status(500).send({ error: err });
+                })
+        }
+    })
 
 module.exports = router;

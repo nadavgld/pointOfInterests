@@ -10,6 +10,11 @@
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="style.css" />
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/bower_components/angular/angular.js"></script>
+    <script src="/bower_components/angular-route/angular-route.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <!-- <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script> -->
 </head>
 
 <body class="">
@@ -27,53 +32,122 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
                 <ul class="navbar-nav mr-auto ml-1">
-                    <li class="nav-item">
+                    <!-- <li class="nav-item active">
                         <a class="nav-link" href="#!/">
                             Home
                         </a>
-                    </li>
-
+                    </li> -->
                     <li class="nav-item">
-                        <a class="nav-link" href="#!/">
-                            Link 2
+                        <a id="homeNav" class="nav-link" href="#!/">
+                            Home
+                        </a>
+                        <a id="profileNav" class="nav-link d-none" href="#!/profile">
+                            Profile
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#!/">
-                            Link 3
+                        <a class="nav-link" onclick="showAboutModal(event)" href="#!/">
+                            About
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link" id="pointsNav" href="#!/points">
+                            Points
+                        </a>
+                    </li>
+<!-- 
                     <li class="nav-item">
                         <form class="form-inline my-2 my-lg-0">
                             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                         </form>
-                    </li>
+                    </li> -->
 
+                    <li class="nav-item">
+                        <div class="sk-circle">
+                            <div class="sk-circle1 sk-child"></div>
+                            <div class="sk-circle2 sk-child"></div>
+                            <div class="sk-circle3 sk-child"></div>
+                            <div class="sk-circle4 sk-child"></div>
+                            <div class="sk-circle5 sk-child"></div>
+                            <div class="sk-circle6 sk-child"></div>
+                            <div class="sk-circle7 sk-child"></div>
+                            <div class="sk-circle8 sk-child"></div>
+                            <div class="sk-circle9 sk-child"></div>
+                            <div class="sk-circle10 sk-child"></div>
+                            <div class="sk-circle11 sk-child"></div>
+                            <div class="sk-circle12 sk-child"></div>
+                        </div>
+                    </li>
                 </ul>
 
                 <ul class="navbar-nav pull-right ml-auto mr-1">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#!/login">
+                    <li class="nav-item">
+                        <a id="logRegNav" class="nav-link" href="#!/login">
                             Login/Register
+                        </a>
+                        <a id="outNav" class="nav-link d-none" href="#!/logout">
+                            Logout
                         </a>
                     </li>
                 </ul>
             </div>
         </nav>
 
-        <div ng-view class="container"></div>
+        <div ng-view class="container-2"></div>
     </main>
 
-    <script src="/bower_components/jquery/dist/jquery.js"></script>
-    <script src="/bower_components/angular/angular.js"></script>
-    <script src="/bower_components/angular-route/angular-route.js"></script>
-    <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+
+    <!-- About Modal -->
+    <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">About Us</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        <li class="list-group-item mb-2">
+                            <div class="col-md-12">
+                                <div class="col-md-12">
+                                    <cite>
+                                        <h3>About us</h3>
+                                    </cite>
+                                </div>
+                                <div class="col-md-12 d-inline-flex mt-2">
+                                    <h3>About N.Y.C</h3>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showAboutModal(event) {
+            event.preventDefault();
+            $('#aboutModal').modal('show');
+        }
+    </script>
+
+    <script src="./bower_components/angular-cookies/angular-cookies.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
     <script src="/app.js"></script>
     <script src="/controllers/homepage.js"></script>
     <script src="/controllers/notFound.js"></script>
+    <script src="/controllers/profile.js"></script>
+    <script src="/controllers/logReg.js"></script>
+    <script src="/controllers/logout.js"></script>
+    <script src="/controllers/points.js"></script>
+    <script src="/controllers/passwordForget.js"></script>
+    <script src="/services/token.js"></script>
 </body>
 
 </html>

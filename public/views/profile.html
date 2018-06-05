@@ -1,0 +1,86 @@
+<div class="" ng-init="init()">
+    <div class="col-md-12 mt-1" ng-init="init()">
+        <h2 class="text-dark"> Welcome {{user.username}} </h3>
+    </div>
+
+    <div class="col-md-12 mt-3 d-flex">
+        <div class="col-md-6 p-2 border-right">
+            <h6>
+                Most populars to you
+            </h6>
+            <div class="row d-flex">
+                <div class="col-md-6" ng-repeat="point in point_for_user">
+                    <div class="card">
+                        <div class="card-header text-center alert-success font-weight-bold">{{point.name}} [{{point.category}}]</div>
+                        <div class="card-body">
+                            <img class="card-img-top" ng-src="{{point.img_url}}">
+                            <p class="card-text" ng-if="point.description.length > 250"> {{point.description | limitTo: 250}}.. </p>
+                            <p class="card-text" ng-if="point.description.length <= 250"> {{point.description}} </p>
+                        </div>
+                        <div class="card-footer d-inline-flex bg-dark text-white">
+                            <div class="col-md-4 pl-0">
+                                <i class="fas fa-external-link-alt"></i>
+                                <a href="#!/point/{{point.id}}" class="card-link text-success">Link</a>
+                            </div>
+
+                            <div class="col-md-3 pl-0">
+                                <i class="fas fa-comments"></i>
+                                <button class="btn btn-link text-success m-0 p-0" ng-click="showReviewsModal(point.id)"> {{ point.total_reviews || 0 }} </button>
+                            </div>
+
+                            <div class="col-md-4 pl-0">
+                                <i class="fas fa-star"></i> {{ point.rating*20 }}%
+                            </div>
+
+                            <div class="col-md-3 pl-0">
+                                <i class="fas fa-eye"></i> {{ point.views }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 p-2 border-left">
+            <h6>
+                Latest favorites
+            </h6>
+            <div class="row d-flex">
+                <div class="col-md-6" ng-if="latest_favorited" ng-repeat="fav in latest_favorited">
+                    <div class="card">
+                        <div class="card-header text-center alert-warning font-weight-bold">{{fav.name}} [{{fav.category}}]</div>
+                        <div class="card-body">
+                            <img class="card-img-top" ng-src="{{fav.img_url}}">
+                            <p class="card-text" ng-if="fav.description.length > 250"> {{fav.description | limitTo: 250}}.. </p>
+                            <p class="card-text" ng-if="fav.description.length <= 250"> {{fav.description}} </p>
+                        </div>
+                        <div class="card-footer d-inline-flex bg-dark text-white">
+                            <div class="col-md-4 pl-0">
+                                <i class="fas fa-external-link-alt"></i>
+                                <a href="#!/point/{{fav.id}}" class="card-link text-warning">Link</a>
+                            </div>
+
+                            <div class="col-md-3 pl-0">
+                                <i class="fas fa-comments"></i>
+                                <button class="btn btn-link text-warning m-0 p-0" ng-click="showReviewsModal(point.id)"> {{ fav.total_reviews || 0 }} </button>
+                            </div>
+
+                            <div class="col-md-4 pl-0">
+                                <i class="fas fa-star"></i> {{ fav.rating*20 }}%
+                            </div>
+
+                            <div class="col-md-3 pl-0">
+                                <i class="fas fa-eye"></i> {{ fav.views }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12" ng-if="!latest_favorited">
+                    <div class="text-center text-warning mt-5">
+                        No favorite points where found..
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

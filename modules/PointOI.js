@@ -10,7 +10,7 @@ var util = require('./util');
 router.get('/', (req, res) => {
     dbUtil.execQuery("select * from points")
         .then((response) => {
-            util.getLatestReviewsToPoints(response, 2).then((response) => {
+            util.getLatestReviewsToPoints(response, 0).then((response) => {
                 res.send(response);
             }).catch((err) => {
                 console.log(err);

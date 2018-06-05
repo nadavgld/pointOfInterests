@@ -1,14 +1,38 @@
-<div class="col-md-12 mt-1" ng-init="init()">
-    <h2 class="text-dark"> Hello Guest </h3>
-</div>
+<div class="col-md-12" ng-init="init()">
+    <div class="col-md-12 d-flex mt-4">
+        <div class="col-md-2 d-flex text-right">
+            <div ng-if="ascending == 1" ng-click="switchAscDesc()">
+                <i class="fas fa-sort-alpha-down filterSign" ></i>
+            </div>
+            <div ng-if="ascending == -1" ng-click="switchAscDesc()">
+                <i class="fas fa-sort-alpha-up filterSign" ></i>
+            </div>
+            <h5 class="ml-2 mt-2"> Sort By:</h5>
+        </div>
+        <div class="col-md-2 mr-2">
+            <select ng-model="sortByValue" class="form-control" ng-change="updateSortValue()">
+                <option ng-repeat="option in sorts"  value="{{option.value}}">{{option.name}}</option>
+            </select>
+        </div>
+    </div>
 
-<div class="col-md-12 mt-3">
-    <h6>Popular Points Of Interest:</h6>
+    <div class="col-md-12 d-flex mt-1">
+        <div class="col-md-2 d-flex text-right">
+            <h5 class="ml-2 mt-2"> Filter By:</h5>
+        </div>
+        <div class="col-md-2 mr-2">
+            <select ng-model="categoryFilter" ng-change="filterByCategory()" class="form-control">
+                <!-- ng-selected="filterByCategory()" -->
+                <option value="">All</option>                
+                <option ng-repeat="category in categories" value="{{category.name}}">{{category.name}}</option>
+            </select>
+        </div>
+    </div>
 
-    <div class="row d-flex">
-        <div class="col-md-4" ng-repeat="point in popularPoints">
-            <div class="card">
-                <div class="card-header text-center alert-success font-weight-bold">{{point.name}}</div>
+    <div class="grid-container-points mt-5">
+        <div class="grid-item-points" ng-repeat="point in points">
+            <div class="card ">
+                <div class="card-header text-center alert-success font-weight-bold">{{point.name}} [{{point.category}}]</div>
                 <div class="card-body">
                     <img class="homepage-card-img" ng-src="{{point.img_url}}">
                     <p class="card-text" ng-if="point.description.length > 275"> {{point.description | limitTo: 275}}.. </p>
@@ -38,12 +62,12 @@
     </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- Reviews Modal -->
+<div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">{{pointToReview.name}} Latest Reviews</h5>
+        <div class="modal-content review-modal-content">
+            <div class="modal-header review-modal-header">
+                <h5 class="modal-title" id="reviewModalLabel">{{pointToReview.name}} Reviews</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

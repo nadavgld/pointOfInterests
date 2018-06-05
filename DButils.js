@@ -7,7 +7,7 @@ var TYPES = require('tedious').TYPES;
 
 var poolConfig = {
     min: 2,
-    max: 6,
+    max: 15,
     log: true
 };
 
@@ -15,7 +15,7 @@ var connectionConfig = {
     userName: 'ngAdmin',
     password: 'nADAD054',
     server: 'myngdb.database.windows.net',
-    options: { encrypt: true, database: 'testDB'}
+    options: { encrypt: true, database: 'testDB',requestTimeout: 3600000}
 };
 
 //create the pool
