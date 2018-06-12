@@ -12,26 +12,28 @@ app.controller('logReg', ['$scope', '$http', '$location', '$routeParams', '$cook
         showLoading();
         $scope.toLogin = true;
 
-        if (tokenService.checkIfUserLoggedIn($cookies)) {
-            $location.path('/profile');
-            $location.replace();
-        }
+        tokenService.checkIfUserLoggedIn($cookies).then(() => {
+            redirectTo('/profile', $scope, $location);
+        }).catch(() => {
 
-        $scope.registerForm.categories = [];
+            $scope.registerForm.categories = [];
 
-        $http.get('countries.xml').then((response) => {
-            $scope.countries = (xml2json($.parseXML(response.data))).Countries.Country;
-        });
+            $http.get('countries.xml').then((response) => {
+                $scope.countries = (xml2json($.parseXML(response.data))).Countries.Country;
+            });
 
-        $http.get('/category').then((response) => {
-            $scope.categories = response.data;
-            hideLoading();
-        });
+            $http.get('/category').then((response) => {
+                $scope.categories = response.data;
+
+                hideLoading();
+            });
+        })
+
     }
 
-    $scope.passwordForget = function(){
-        $location.path('/forget');
-        $location.replace();
+    $scope.passwordForget = function () {
+        $location.path('/forget')
+        $location.replace()
     }
 
     $scope.toggleLogReg = function () {
@@ -39,6 +41,10 @@ app.controller('logReg', ['$scope', '$http', '$location', '$routeParams', '$cook
         $scope.loginForm = {};
         $scope.registerForm = {};
         $scope.registerForm.categories = [];
+
+        setTimeout(() => {
+            $('[data-toggle="tooltip"]').tooltip();
+        }, 10);
     }
 
     $scope.toggleCategory = function (id) {
@@ -120,8 +126,9 @@ app.controller('logReg', ['$scope', '$http', '$location', '$routeParams', '$cook
 
             $scope.loginForm.username = $scope.afterRegUser;
             setTimeout(() => {
+                $('[data-toggle="tooltip"]').tooltip("disable");
                 alert("Register successfully");
-            }, 2000);
+            }, 10);
         })
     }
 
@@ -242,7 +249,3 @@ function xml2json(xml) {
         console.log(e.message);
     }
 }
-
-setTimeout(() => {
-    $('[data-toggle="tooltip"]').tooltip();
-}, 1000);

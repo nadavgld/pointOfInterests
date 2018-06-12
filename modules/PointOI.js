@@ -22,6 +22,23 @@ router.get('/', (req, res) => {
         })
 })
 
+router.get('/id/:id', (req, res) => {
+    var id = parseInt(req.params.id);
+
+    dbUtil.execQuery(`select * from points where id = '${id}'`)
+        .then((response) => {
+            util.getLatestReviewsToPoints(response, 0).then((response) => {
+                res.send(response);
+            }).catch((err) => {
+                console.log(err);
+            })
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send({ error: err });
+        })
+})
+
 router.get('/random/:amount', (req, res) => {
     var num = parseInt(req.params.amount);
     const rating = 2;

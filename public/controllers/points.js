@@ -1,5 +1,5 @@
 
-app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cookies', 'tokenService', function ($scope, $http, $location, $routeParams, $cookies, tokenService) {
+app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cookies', 'tokenService', 'localStorageService', function ($scope, $http, $location, $routeParams, $cookies, tokenService, localStorageService) {
 
     $scope.points = [];
     $scope.points_temp = [];
@@ -9,8 +9,15 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
     $scope.categoryFilter = '';
     $scope.token;
     $scope.user = {};
+    $scope.searchForm;
+    $scope.showFiltering = true;
+    $scope.favorites = [];
 
-    $scope.ascending = -1;
+    _sLimit = 14;
+    _fBase = '100px'
+    searchLimit = 14;
+
+    $scope.ascending = 1;
     $scope.sortByValue = 'category';
     $scope.sorts = [
         {
@@ -38,14 +45,11 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
     $scope.init = function () {
         showLoading();
 
-        if (!tokenService.checkIfUserLoggedIn($cookies)) {
-            $location.path('/');
-            $location.replace();
-        } else {
+        tokenService.checkIfUserLoggedIn($cookies).then((response) => {
             $scope.token = $cookies.get('token');
 
             $http.get('/user/token/' + $scope.token).then((response) => {
-                if (response.data) {
+                if (!response.data.error) {
                     $scope.user.username = response.data.userName;
                     $scope.user.id = response.data.id;
 
@@ -55,60 +59,132 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
 
                         $http.get('/category').then((response) => {
                             $scope.categories = response.data;
-                            // $scope.categories.unshift({ name: "All", id: -1 });
-                            // $scope.switchAscDesc();
-                            $scope.filterByCategory();
+                            $scope.filterByCategory(false);
+                            $scope.favorites = localStorageService.get('favorites') ? localStorageService.get('favorites') : [];
+                            
+                            if ($scope.favorites.length == 0) {
+
+                                $http.get('/user/' + $scope.user.id + '/favorite?token=' + $scope.token).then((response) => {
+                                    $scope.favorites = response.data;
+                                    $scope.favorites.map(f => f.date = f.date.slice(0, 19).replace('T', ' '))
+    
+                                    localStorageService.set('favorites', $scope.favorites);
+                                    $("#favoritesCount").html("(" + $scope.favorites.length + ")")
+    
+                                })
+                            } else {
+                                $("#favoritesCount").html("(" + $scope.favorites.length + ")")
+                            }
 
                             hideLoading();
                         });
                     })
                 }
             });
+        }).catch((err) => {
+            redirectTo('/', $scope, $location);
+        })
+    }
+
+    $scope.isFavorited = function (id) {
+        id = parseInt(id);
+
+        for (var i = 0; i < $scope.favorites.length; i++) {
+            if (id == $scope.favorites[i].p_id)
+                return true;
+        }
+
+        return false;
+    }
+
+    $scope.toggleFavorite = function (id) {
+        id = parseInt(id);
+
+        if ($scope.isFavorited(id)) {
+            var idx = -1;
+
+            for (var i = 0; i < $scope.favorites.length; i++) {
+                if ($scope.favorites[i].p_id == id) {
+                    idx = i;
+                    break;
+                }
+            }
+
+            if (idx > -1)
+                $scope.favorites.splice(idx, 1);
+        } else {
+            $scope.favorites.push({
+                p_id: id,
+                active: 1,
+                u_id: $scope.user.id,
+                fav_order: ($scope.favorites.length + 1),
+                date: new Date().toISOString().slice(0, 19).replace('T', ' ')
+            });
+        }
+
+        localStorageService.set('favorites', $scope.favorites)
+        $("#favoritesCount").html("(" + $scope.favorites.length + ")")
+
+    }
+
+    $scope.toggleFiltering = function () {
+        $scope.showFiltering = !$scope.showFiltering;
+
+        if ($scope.showFiltering) {
+            $(".filter-section").slideDown();
+        }
+        else {
+            $(".filter-section").slideUp();
         }
     }
 
     $scope.sortBy = function (arr) {
-        console.log($scope.sortByValue)
-
         return new Promise((resolve, reject) => {
             var x = [].concat(arr).slice().sort((a, b) =>
-                a[$scope.sortByValue] < b[$scope.sortByValue] ? 1 * $scope.ascending : -1 * $scope.ascending
+                a[$scope.sortByValue] < b[$scope.sortByValue] ? -1 * $scope.ascending : 1 * $scope.ascending
             );
             resolve(x);
         });
     }
 
     $scope.switchAscDesc = function () {
-        console.log($scope.ascending)
         $scope.ascending = $scope.ascending * -1;
-        setTimeout(() => {
-            $scope.updateSortValue();
-        }, 50);
-
+        $scope.updateSortValue();
     }
 
     $scope.updateSortValue = function () {
-        console.log( $scope.sortByValue)
-        // const x = JSON.parse(JSON.stringify($scope.points))
-
-        setTimeout(() => {
-            $scope.sortBy($scope.points).then(arr => $scope.points = arr);
-        }, 50);
-
+        $scope.sortBy($scope.points).then(arr => {
+            $scope.points = arr
+            $scope.$apply();
+        });
     }
 
-    $scope.filterByCategory = function () {
-        var x = JSON.parse(JSON.stringify($scope.points_temp))
+    $scope.filterByCategory = function (byFilter) {
+        var x;
+
+        if (byFilter)
+            x = $scope.searchForm.length == 0 ? JSON.parse(JSON.stringify($scope.points_temp)) : JSON.parse(JSON.stringify($scope.points))
+        else if ($scope.searchForm)
+            $scope.filterByName()
+        else
+            x = JSON.parse(JSON.stringify($scope.points_temp))
 
         new Promise((resolve, reject) => {
             if ($scope.categoryFilter != '') {
-                const y = x.filter((p) => p.category == $scope.categoryFilter);
-                resolve(y);
-            }else{
+                try {
+                    const y = x.filter((p) => p.category == $scope.categoryFilter);
+                    resolve(y);
+                } catch (e) {
+                    resolve(x)
+                }
+            } else {
                 resolve(x);
             }
-        }).then(arr => $scope.points = arr);
-        
+        }).then(arr => {
+            $scope.points = arr
+            $scope.updateSortValue();
+        });
+
     }
 
     $scope.showReviewsModal = function (id) {
@@ -144,6 +220,51 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
         }
         hideLoading();
 
+    }
+
+    $scope.checkLength = function () {
+        if ($scope.searchForm.length > searchLimit) {
+            var font = parseInt($("#searchForm").css('font-size'))
+            $("#searchForm").css('font-size', (font / 1.5) + 'px')
+            searchLimit *= 2
+        }
+
+        if ($scope.searchForm.length == 0) {
+            $("#searchForm").css('font-size', _fBase)
+            searchLimit = _sLimit
+
+        }
+        $scope.filterByName();
+    }
+
+    $scope.filterByName = function () {
+        var x = JSON.parse(JSON.stringify($scope.points_temp))
+
+        new Promise((resolve, reject) => {
+            if ($scope.searchForm != '') {
+                const y = x.filter((p) => $scope.searchPoint(p));
+                resolve(y);
+            } else {
+                resolve(x);
+            }
+        }).then(arr => {
+            $scope.points = arr
+            $scope.filterByCategory(true);
+        });
+    }
+
+    $scope.searchPoint = function (p) {
+        return p.name.toLowerCase().indexOf($scope.searchForm.toLowerCase()) >= 0 ||
+            p.category.toLowerCase().indexOf($scope.searchForm.toLowerCase()) >= 0 ||
+            p.description.toLowerCase().indexOf($scope.searchForm.toLowerCase()) >= 0
+    }
+
+    $scope.clearFiltering = function () {
+        $scope.searchForm = '';
+        $scope.categoryFilter = '';
+        $scope.ascending = 1;
+        $scope.sortByValue = 'category';
+        $scope.filterByCategory(false);
     }
 
 }]);

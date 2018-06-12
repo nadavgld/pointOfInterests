@@ -10,14 +10,15 @@ exports.generateToken = function (payload, expires) {
     return token;
 }
 
-exports.getDataFromToken = function(token){
-    return new Promise((resolve,reject)=>{
+exports.getDataFromToken = function (token) {
+    return new Promise((resolve, reject) => {
         jwt.verify(token, secret, function (err, decoded) {
             if (err)
-            reject(null);
-            
-            var decoded = jwt.decode(token, { complete: true });
-            resolve(decoded);
+                reject(false);
+            else {
+                var decoded = jwt.decode(token, { complete: true });
+                resolve(decoded);
+            }
         })
     })
 }

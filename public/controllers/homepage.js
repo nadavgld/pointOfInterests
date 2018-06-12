@@ -8,19 +8,20 @@ app.controller('homepage', ['$scope', '$http', '$location', '$routeParams', '$co
 
     $scope.init = function () {
         showLoading();
-        if (tokenService.checkIfUserLoggedIn($cookies)) {
-            $location.path('/profile');
-            $location.replace();
-        }
 
-        $http.get('/point/random/3').then((response) => {
+        tokenService.checkIfUserLoggedIn($cookies).then((response) => {
+            redirectTo('/profile', $scope, $location);
+        }).catch((err) => {
+            $http.get('/point/random/3').then((response) => {
 
-            if (response.data) {
-                $scope.popularPoints = response.data;
-                hideLoading();
-            }
+                if (response.data) {
+                    $scope.popularPoints = response.data;
+                    hideLoading();
+                }
 
+            }).catch(err => console.log(err))
         })
+
     }
 
     $scope.showReviewsModal = function (id) {
@@ -46,12 +47,12 @@ app.controller('homepage', ['$scope', '$http', '$location', '$routeParams', '$co
                     point.reviews[idx].username = response.data.username;
                     point.reviews[idx].time = new Date(point.reviews[idx].timestamp).getTime();
 
-                    if (idx == point.reviews.length - 1){
+                    if (idx == point.reviews.length - 1) {
                         $('#exampleModal').modal('show');
                     }
-                    
-                })
-                
+
+                }).catch(err => console.log(err))
+
             }
         }
         hideLoading();

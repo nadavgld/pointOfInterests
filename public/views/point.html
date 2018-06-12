@@ -1,0 +1,145 @@
+<div class="row d-block" ng-init="init(true)">
+
+    <div class="w-75 m-auto jumbotron pt-3 pb-3">
+        <h1 class="text-left display-4 pl-3">{{point.name}}</h1>
+        <div class="d-flex">
+            <b class="pl-4">Category: </b>
+            <div class="pl-3 mb-2">{{point.category}}</div>
+        </div>
+        <div class="col-md-12 d-flex mt-5">
+            <div class="col-md-6 text-left">
+                <img class="point-img" ng-src="{{point.img_url}}">
+            </div>
+
+            <div class="col-md-6 text-left">
+                <div class="lead">
+                    <p class="card-text"> {{point.description}} </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 mt-4 d-flex text-dark">
+            <div class="col-md-4 pl-0">
+                <div ng-if="!isFavorite" class="pointer" ng-click="toggleFavorite()">
+                    <i class="far fa-star"></i>
+                    <span class="m-0 p-0"> Make Favorite </span>
+                </div>
+
+                <div ng-if="isFavorite" class="pointer yellow-star" ng-click="toggleFavorite()">
+                    <i class="fas fa-star"></i>
+                    <span class="m-0 p-0"> Un-Favorite </span>
+                </div>
+            </div>
+
+            <div class="col-md-3 pl-0">
+                <i class="fas fa-comments"></i>
+                <button class="btn btn-link text-success m-0 p-0" ng-click="showReviewsModal()"> {{ point.total_reviews || 0 }} </button>
+            </div>
+
+            <div class="col-md-4 pl-0">
+                <i class="fas fa-heart"></i> {{ point.rating*20 | number : 0 }}%
+            </div>
+
+            <div class="col-md-3 pl-0">
+                <i class="fas fa-eye"></i> {{ point.views }}
+            </div>
+        </div>
+    </div>
+
+    <div class="comment-section">
+        <h5 class="display-6">
+            <button class="btn btn-success" onclick="$('#addReviewModal').modal('show');">Add Review</button>
+        </h5>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="pointModal" tabindex="-1" role="dialog" aria-labelledby="pointModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content review-modal-content">
+            <div class="modal-header review-modal-header">
+                <h5 class="modal-title" id="pointModalLabel">{{pointToReview.name}} Reviews</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div ng-if="pointHasReviews" class="modal-body">
+                <ul class="list-group">
+                    <li class="list-group-item mb-2" ng-repeat="review in pointToReview.reviews">
+                        <div class="col-md-12">
+                            <h6 class="col-md-12">
+                                <i class="fas fa-user-circle"></i>
+                                {{ review.username }}
+                            </h6>
+                            <div class="col-md-12">
+                                <cite>
+                                    {{ review.description }}
+                                </cite>
+                            </div>
+                            <hr>
+                            <div class="col-md-12 d-inline-flex mt-1">
+                                <div class="col-md-8 text-left pl-0">
+                                    <i class="fas fa-clock"></i>
+                                    {{ review.time | date:"dd/MM/yyyy 'at' H:mma" }}
+                                </div>
+                                <div class="col-md-4 text-right pr-0">
+                                    {{ review.rating | number : 0 }}/5
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div ng-if="!pointHasReviews" class="modal-body">
+                This point has no reviews yet.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Review Modal -->
+<div class="modal fade" id="addReviewModal" tabindex="-1" role="dialog" aria-labelledby="addReviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content review-modal-content">
+            <div class="modal-header review-modal-header">
+                <h5 class="modal-title" id="addReviewModalLabel">Add Review - {{point.name}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="reviewDescription">
+                        <i class="fas fa-comment-dots"></i> Review Description: </label>
+                    <textarea class="form-control" ng-model="newReview" cols="30" rows="5"></textarea>
+                    <small ng-bind="descriptionErr" class="text-danger"></small>
+                </div>
+
+                <div class="d-flex mt-1">
+                    <label> Rating: </label>
+                    <div class="stars ml-3 col-md-10 d-flex mt-1">
+                        <div class="col-md-1" ng-click="setRate(1)">
+                            <i class="far fa-star reviewStars" id="star_1"></i>
+                        </div>
+                        <div class="col-md-1" ng-click="setRate(2)">
+                            <i class="far fa-star reviewStars" id="star_2"></i>
+                        </div>
+                        <div class="col-md-1" ng-click="setRate(3)">
+                            <i class="far fa-star reviewStars" id="star_3"></i>
+                        </div>
+                        <div class="col-md-1" ng-click="setRate(4)">
+                            <i class="far fa-star reviewStars" id="star_4"></i>
+                        </div>
+                        <div class="col-md-1" ng-click="setRate(5)">
+                            <i class="far fa-star reviewStars" id="star_5"></i>
+                        </div>
+                    </div>
+                </div>
+                <small ng-bind="rateErr" class="text-danger"></small>
+            
+                <button class="btn btn-success w-100 mt-2" ng-click="applyReview()">Review</button>
+            </div>
+        </div>
+    </div>
+</div>

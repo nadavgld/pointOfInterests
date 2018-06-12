@@ -1,27 +1,30 @@
+<!DOCTYPE html>
 <html ng-app="POI-app">
 
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Points Of Interests</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css" />
     <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+"
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
     <link rel="stylesheet" href="style.css" />
     <script src="/bower_components/jquery/dist/jquery.js"></script>
     <script src="/bower_components/angular/angular.js"></script>
     <script src="/bower_components/angular-route/angular-route.js"></script>
     <script src="/bower_components/bootstrap/dist/js/bootstrap.bundle.js"></script>
-    <!-- <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script> -->
+    <link href="https://fonts.googleapis.com/css?family=Sunflower:300" rel="stylesheet">
 </head>
 
 <body class="">
 
     <main role="main">
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-menu sticky">
             <i class="fas fa-paper-plane mr-1 text-success"></i>
             <a class="navbar-brand text-success" href="#">POI - N.Y.C</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -32,11 +35,6 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
                 <ul class="navbar-nav mr-auto ml-1">
-                    <!-- <li class="nav-item active">
-                        <a class="nav-link" href="#!/">
-                            Home
-                        </a>
-                    </li> -->
                     <li class="nav-item">
                         <a id="homeNav" class="nav-link" href="#!/">
                             Home
@@ -53,19 +51,31 @@
                     </li>
 
                     <li class="nav-item">
+                        <a class="nav-link" id="mapNav" href="#!/map">
+                            Map
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
                         <a class="nav-link" id="pointsNav" href="#!/points">
                             Points
                         </a>
                     </li>
-<!-- 
-                    <li class="nav-item">
-                        <form class="form-inline my-2 my-lg-0">
-                            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                        </form>
-                    </li> -->
 
                     <li class="nav-item">
+                        <a class="nav-link" id="favoritesNav" href="#!/favorites">
+                            Favorites
+                            <span id="favoritesCount"></span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link d-none" id="adminNav" href="#!/panel">
+                            Admin Panel
+                        </a>
+                    </li>
+
+                    <li class="nav-item mt-1">
                         <div class="sk-circle">
                             <div class="sk-circle1 sk-child"></div>
                             <div class="sk-circle2 sk-child"></div>
@@ -102,7 +112,7 @@
 
     <!-- About Modal -->
     <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-about" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">About Us</h5>
@@ -114,13 +124,36 @@
                     <ul class="list-group">
                         <li class="list-group-item mb-2">
                             <div class="col-md-12">
+
                                 <div class="col-md-12">
+                                    <h3>Who are we?</h3>
                                     <cite>
-                                        <h3>About us</h3>
+                                        <ul style="list-style-type: none;">
+                                            <li>
+                                                <i class="fas fa-user"></i> Nadav Grinberg - 305780504
+                                            </li>
+                                            <li>
+                                                <i class="fas fa-user"></i> Guy Zaks - 203574009
+                                            </li>
+                                        </ul>
                                     </cite>
                                 </div>
-                                <div class="col-md-12 d-inline-flex mt-2">
+
+                                <hr>
+
+                                <div class="col-md-12 mt-3">
                                     <h3>About N.Y.C</h3>
+                                    <p>
+                                        The City of New York, often called New York City (NYC) or simply New York, is the most populous city in the United States.
+                                        With an estimated 2017 population of 8,622,698 distributed over a land area of about
+                                        302.6 square miles (784 km2), New York City is also the most densely populated major
+                                        city in the United States.
+                                    </p>
+
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Chrysler_Building_spire%2C_Manhattan%2C_by_Carol_Highsmith_%28LOC_highsm.04444%29.jpg/492px-Chrysler_Building_spire%2C_Manhattan%2C_by_Carol_Highsmith_%28LOC_highsm.04444%29.jpg"
+                                        alt="" class="aboutImages">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Statue_of_Liberty%2C_NY.jpg/1200px-Statue_of_Liberty%2C_NY.jpg"
+                                        alt="" class="mt-2 aboutImages">
                                 </div>
                             </div>
                         </li>
@@ -131,13 +164,19 @@
     </div>
 
     <script>
+        // var _time = new Date();
         function showAboutModal(event) {
             event.preventDefault();
             $('#aboutModal').modal('show');
         }
     </script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+    <script src="./bower_components/poly/polymaps.js"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.css' rel='stylesheet' />
     <script src="./bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="./bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
     <script src="/app.js"></script>
     <script src="/controllers/homepage.js"></script>
@@ -146,7 +185,11 @@
     <script src="/controllers/logReg.js"></script>
     <script src="/controllers/logout.js"></script>
     <script src="/controllers/points.js"></script>
+    <script src="/controllers/point.js"></script>
+    <script src="/controllers/favorites.js"></script>
+    <script src="/controllers/map.js"></script>
     <script src="/controllers/passwordForget.js"></script>
+    <script src="/controllers/panel.js"></script>
     <script src="/services/token.js"></script>
 </body>
 

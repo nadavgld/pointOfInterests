@@ -23,9 +23,24 @@
     height: 10vh;
 }
 
+.card-text{
+    font-style: italic;
+    padding-top: 5px;
+}
+
 .card-img-top{
     max-width: 300px;
     max-height: 200px;
+    border: 3px solid var(--white);
+    box-shadow: 0px 0px 25px #8f8f8f
+}
+
+.point-img{
+    border: 3px solid var(--white);
+    box-shadow: 0px 0px 25px #8f8f8f;
+    object-fit: cover;
+    max-width: 400px;
+    max-height: 320px;
 }
 
 .homepage-card-img{
@@ -34,7 +49,8 @@
     left: 0;
     right: 0;
     display: -webkit-box;
-    border: 1px solid var(--dark)
+    border: 3px solid var(--white);
+    box-shadow: 0px 0px 25px #8f8f8f
 }
 
 .grid-container {
@@ -61,11 +77,12 @@ input[type="checkbox"]{
 .container-2{
     padding-left: 7vw;
     padding-right: 7vw;
+    margin-top: 80px;
 }
 
 .grid-container-points {
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: 33% 33% auto;
     /* padding: 5px; */
 }
 
@@ -88,6 +105,90 @@ input[type="checkbox"]{
     height: 30px;
     margin-top: 10px;
     color: var(--danger);
+}
+
+.shadow-menu{
+    box-shadow: 0px 2px 15px #9c9c9c;
+}
+
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    opacity: 0.7;
+}
+
+.searchInput{
+    height: 160px;
+    font-size: 100px;
+    border: 0;
+    border-bottom: 1px solid #c3c3c3;
+    border-radius: 0;
+    width: 100%;
+    color: var(--success);
+    font-family: 'Sunflower';
+}
+
+.searchInput::-webkit-input-placeholder{
+    color: #b0b0b0
+}
+
+.searchIcon{
+    height: 160px;
+    font-size: 100px;
+    color: #555;    
+}
+
+.searchInput:focus{
+    border:0;
+    outline: none;
+    color: #555;
+    box-shadow: 0 0 0 0rem rgba(255, 255, 255);
+    border-bottom: 1px solid #c3c3c3;    
+}
+
+.pointer:hover{
+    cursor: pointer;
+}
+
+.comment-section{
+    padding-left: 11vw;
+    padding-top: 15px;
+}
+
+.fa-star:hover{
+    color: var(--warning)
+}
+
+.yellow-star{
+    color: var(--warning)
+}
+
+.fa-heart:hover{
+    color: var(--danger)
+}
+
+.aboutImages{
+    width: inherit;
+    height: -webkit-fill-available;
+}
+
+.modal-about{
+    max-width: 50vw;
+}
+
+.chartCell{
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px dashed var(--success);
+    background: #f0f0f0
+}
+
+#map {width:85vw; height:85vh; background:#666;margin:auto}
+
+.mapboxgl-canvas {
+    position: inherit !important;
 }
 /* Loader */
 

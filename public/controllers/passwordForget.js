@@ -31,7 +31,6 @@ app.controller('passwordForget', ['$scope', '$http', '$location', '$routeParams'
     }
 
     $scope.getPassword = function () {
-        console.log($scope.answers);
 
         $http.post('/user/password', {email: $scope.user.email, answer: $scope.answers.answer, answer2: $scope.answers.answer2 }).then((response) => {
             var data = response.data;

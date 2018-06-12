@@ -1,4 +1,4 @@
-var app = angular.module('POI-app', ['ngRoute', 'ngCookies']);
+var app = angular.module('POI-app', ['ngRoute', 'ngCookies', 'LocalStorageModule']);
 
 app.config(function ($routeProvider) {
     $routeProvider.when('/', {
@@ -25,6 +25,22 @@ app.config(function ($routeProvider) {
             controller: 'points',
             templateUrl: 'views/points.html'
         })
+        .when('/favorites', {
+            controller: 'favorites',
+            templateUrl: 'views/favorites.html'
+        })
+        .when('/point/:id', {
+            controller: 'point',
+            templateUrl: 'views/point.html'
+        })
+        .when('/panel', {
+            controller: 'panel',
+            templateUrl: 'views/panel.html'
+        })
+        .when('/map', {
+            controller: 'map',
+            templateUrl: 'views/map.html'
+        })
         .otherwise({
             controller: 'notFound',
             templateUrl: 'views/404.html'
@@ -38,26 +54,39 @@ $(".navbar-nav > .nav-item > a").click((event) => {
     $(event.target).parent().addClass("active");
 })
 
-function showLoading(){
+function showLoading() {
     $(".sk-circle").show();
 }
 
-function hideLoading(){
+function hideLoading() {
     $(".sk-circle").hide();
 }
 
-function showUserNav(){
+function showUserNav(isAdmin) {
     $("#profileNav").removeClass('d-none');
     $("#outNav").removeClass('d-none');
     $("#pointsNav").removeClass('d-none');
+    $("#favoritesNav").removeClass('d-none');
     $("#logRegNav").addClass('d-none');
     $("#homeNav").addClass('d-none');
+
+    if (isAdmin) {
+        $("#adminNav").removeClass('d-none');
+    }
 }
 
-function showLogRegNav(){
+function showLogRegNav() {
     $("#profileNav").addClass('d-none');
     $("#outNav").addClass('d-none');
     $("#pointsNav").addClass('d-none');
+    $("#adminNav").addClass('d-none');
+    $("#favoritesNav").addClass('d-none');
     $("#logRegNav").removeClass('d-none');
     $("#homeNav").removeClass('d-none');
+}
+
+function redirectTo(path, scope, location) {
+    location.path(path);
+    location.replace();
+    scope.$apply();
 }
