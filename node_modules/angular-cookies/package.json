@@ -1,0 +1,64 @@
+{
+  "_from": "angular-cookies",
+  "_id": "angular-cookies@1.7.0",
+  "_inBundle": false,
+  "_integrity": "sha512-bxY7SAl7M+P+DazcDq4OVSFhmR0QET6KWw7bsxh4V22Ky+NcGbdyFySRNqu0TtWB5LkiGvo0wCFLd/vDyuMQOQ==",
+  "_location": "/angular-cookies",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "angular-cookies",
+    "name": "angular-cookies",
+    "escapedName": "angular-cookies",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/angular-cookies/-/angular-cookies-1.7.0.tgz",
+  "_shasum": "d0d0e5feb302e0ad202a9be5fa14b52646a155b1",
+  "_spec": "angular-cookies",
+  "_where": "C:\\Users\\NadavGrinberg\\Google Drive\\לימודים\\סמסטר ו\\סביבות פיתוח\\עבודה 3.2\\pointOfInterests\\public",
+  "author": {
+    "name": "Angular Core Team",
+    "email": "angular-core+npm@google.com"
+  },
+  "bugs": {
+    "url": "https://github.com/angular/angular.js/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "AngularJS module for cookies",
+  "homepage": "http://angularjs.org",
+  "jspm": {
+    "shim": {
+      "angular-cookies": {
+        "deps": [
+          "angular"
+        ]
+      }
+    }
+  },
+  "keywords": [
+    "angular",
+    "framework",
+    "browser",
+    "cookies",
+    "client-side"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "angular-cookies",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angular/angular.js.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.7.0"
+}
