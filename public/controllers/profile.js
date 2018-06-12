@@ -69,9 +69,11 @@ app.controller('profile', ['$scope', '$http', '$location', '$routeParams', '$coo
 
                         var promises = [];
                         for (var i = 0; i < 2; i++) {
-                            var id = $scope.favorites[i].p_id;
-                            var _p = $http.get('/point/id/' + id)
-                            promises.push(_p)
+                            if($scope.favorites[i]){
+                                var id = $scope.favorites[i].p_id;
+                                var _p = $http.get('/point/id/' + id)
+                                promises.push(_p)
+                            }
                         }
 
                         Promise.all(promises).then((res) => {

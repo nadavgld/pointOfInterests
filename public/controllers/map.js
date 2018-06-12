@@ -40,6 +40,12 @@ app.controller('map', ['$scope', '$http', '$location', '$routeParams', 'tokenSer
         })
     }
 
+    $scope.redirectTo = function (path) {
+        $location.path(path);
+        $location.replace();
+        $scope.$apply();
+    }
+
     // Generates map via mapbox
     $scope.getMap = function () {
 

@@ -67,6 +67,7 @@ function showUserNav(isAdmin) {
     $("#outNav").removeClass('d-none');
     $("#pointsNav").removeClass('d-none');
     $("#favoritesNav").removeClass('d-none');
+    $("#mapNav").removeClass('d-none');
     $("#logRegNav").addClass('d-none');
     $("#homeNav").addClass('d-none');
 
@@ -81,6 +82,7 @@ function showLogRegNav() {
     $("#pointsNav").addClass('d-none');
     $("#adminNav").addClass('d-none');
     $("#favoritesNav").addClass('d-none');
+    $("#mapNav").addClass('d-none');
     $("#logRegNav").removeClass('d-none');
     $("#homeNav").removeClass('d-none');
 }

@@ -12,7 +12,7 @@
             <small class="text-danger">{{loginForm.err}}</small>
         </div>
 
-        <div class="row">
+        <div class="row pb-2">
             <button class="btn btn-link m-0 p-0 text-success" ng-click="toggleLogReg()">
                 <i class="fas fa-user-plus"></i> Register</button>
             <span class="ml-1"> | </span>
@@ -33,10 +33,12 @@
                 <div class="col-md-6 pull-left ml-0 pl-0 pr-1">
                     <input type="text" data-toggle="tooltip" title="First Name" name="firstName" ng-model="registerForm.firstName" placeholder="First Name"
                         class="form-control mt-1">
+                    <small class="text-danger">{{regErr.firstname}}</small>
                 </div>
                 <div class="col-md-6 pull-right mr-0 pr-0 pl-1">
                     <input type="text" data-toggle="tooltip" title="Last Name" name="lastName" ng-model="registerForm.lastName" placeholder="Last Name"
                         class="form-control mt-1">
+                    <small class="text-danger">{{regErr.lastname}}</small>
                 </div>
             </div>
 
@@ -44,25 +46,39 @@
                 <option value="" disabled="disabled"> Choose a country </option>
                 <option ng-repeat="country in countries" value="{{country.Name}}"> {{ country.Name }} </option>
             </select>
+            <small class="text-danger">{{regErr.country}}</small>
+
             <input ng-if="registerForm.country" type="text" name="city" data-toggle="tooltip" title="City" ng-model="registerForm.city"
                 placeholder="City" class="form-control mt-1">
+            <small class="text-danger">{{regErr.city}}</small>
+
             <hr>
             <input type="text" name="email" ng-model="registerForm.email" data-toggle="tooltip" title="Email" placeholder="E-mail Ex: abc@def.ghi"
                 class="form-control mt-1">
+            <small class="text-danger">{{regErr.email}}</small>
+
             <input type="text" name="username" ng-model="registerForm.username" placeholder="Username" data-toggle="tooltip" title="Username"
                 class="form-control mt-1">
+            <small class="text-danger">{{regErr.username}}</small>
+
             <input type="Password" name="password" ng-model="registerForm.password" placeholder="Password" data-toggle="tooltip" title="Password"
                 class="form-control mt-1">
+            <small class="text-danger">{{regErr.password}}</small>
+
             <hr>
 
             <div class="d-flex">
                 <div class="col-md-6 pull-left ml-0 pl-0 pr-1">
                     <input type="text" name="question" ng-model="registerForm.question" data-toggle="tooltip" title="1st Question" placeholder="1st security question"
                         class="form-control mt-1">
+                    <small class="text-danger">{{regErr.question}}</small>
+
                 </div>
                 <div class="col-md-6 pull-right mr-0 pr-0 pl-1">
                     <input type="text" name="answer" ng-model="registerForm.answer" placeholder="1st security answer" data-toggle="tooltip" title="1st Answer"
                         class="form-control mt-1">
+                    <small class="text-danger">{{regErr.answer}}</small>
+
                 </div>
             </div>
 
@@ -70,10 +86,13 @@
                 <div class="col-md-6 pull-left ml-0 pl-0 pr-1">
                     <input type="text" name="question2" ng-model="registerForm.question2" placeholder="2nd security question" data-toggle="tooltip"
                         title="2nd Question" class="form-control mt-1">
+                    <small class="text-danger">{{regErr.question2}}</small>
+
                 </div>
                 <div class="col-md-6 pull-right mr-0 pr-0 pl-1">
                     <input type="text" name="answer2" ng-model="registerForm.answer2" placeholder="2nd security question" data-toggle="tooltip"
                         title="2nd Answer" class="form-control mt-1">
+                    <small class="text-danger">{{regErr.answer2}}</small>
                 </div>
             </div>
 
@@ -84,11 +103,12 @@
                     <input type="checkbox" name="categories" value="category.name" ng-click="toggleCategory(category.id)"> {{category.name}}
                 </div>
             </div>
+            <small class="text-danger">{{regErr.categories}}</small>
 
             <button class="btn btn-success form-control mt-2" ng-click="register()">Register</button>
             <small class="text-danger">{{registerForm.err}}</small>
         </div>
-        <div class="row">
+        <div class="row pb-2">
             <span>Already have an account? </span>
             <button class="btn btn-link m-0 p-0 text-success" ng-click="toggleLogReg()">Login</button>
         </div>

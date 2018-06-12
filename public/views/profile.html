@@ -20,8 +20,8 @@
                         </div>
                         <div class="card-body">
                             <img class="card-img-top" ng-src="{{point.img_url}}">
-                            <p class="card-text" ng-if="point.description.length > 250"> {{point.description | limitTo: 250}}.. </p>
-                            <p class="card-text" ng-if="point.description.length <= 250"> {{point.description}} </p>
+                            <p class="card-text" ng-if="point.description.length > 200"> {{point.description | limitTo: 200}}.. </p>
+                            <p class="card-text" ng-if="point.description.length <= 200"> {{point.description}} </p>
                         </div>
                         <div class="card-footer d-inline-flex bg-dark text-white text-center">
                             <div class="col-md-4">
@@ -57,8 +57,8 @@
                         </div>
                         <div class="card-body">
                             <img class="card-img-top" ng-src="{{fav.img_url}}">
-                            <p class="card-text" ng-if="fav.description.length > 250"> {{fav.description | limitTo: 250}}.. </p>
-                            <p class="card-text" ng-if="fav.description.length <= 250"> {{fav.description}} </p>
+                            <p class="card-text" ng-if="fav.description.length > 200"> {{fav.description | limitTo: 200}}.. </p>
+                            <p class="card-text" ng-if="fav.description.length <= 200"> {{fav.description}} </p>
                         </div>
                         <div class="card-footer d-inline-flex bg-dark text-white text-center">
                             <div class="col-md-4">
