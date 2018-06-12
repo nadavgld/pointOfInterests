@@ -42,6 +42,7 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
         }
     ]
 
+    //Initialize Scope - gets all points details
     $scope.init = function () {
         showLoading();
 
@@ -61,16 +62,16 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
                             $scope.categories = response.data;
                             $scope.filterByCategory(false);
                             $scope.favorites = localStorageService.get('favorites') ? localStorageService.get('favorites') : [];
-                            
+
                             if ($scope.favorites.length == 0) {
 
                                 $http.get('/user/' + $scope.user.id + '/favorite?token=' + $scope.token).then((response) => {
                                     $scope.favorites = response.data;
                                     $scope.favorites.map(f => f.date = f.date.slice(0, 19).replace('T', ' '))
-    
+
                                     localStorageService.set('favorites', $scope.favorites);
                                     $("#favoritesCount").html("(" + $scope.favorites.length + ")")
-    
+
                                 })
                             } else {
                                 $("#favoritesCount").html("(" + $scope.favorites.length + ")")
@@ -86,6 +87,7 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
         })
     }
 
+    //Checks if a point is favorited
     $scope.isFavorited = function (id) {
         id = parseInt(id);
 
@@ -97,6 +99,7 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
         return false;
     }
 
+    //Favorite\Un-favorite a point    
     $scope.toggleFavorite = function (id) {
         id = parseInt(id);
 
@@ -127,6 +130,7 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
 
     }
 
+    //Show\Hide filtering section    
     $scope.toggleFiltering = function () {
         $scope.showFiltering = !$scope.showFiltering;
 
@@ -138,6 +142,7 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
         }
     }
 
+    //Sort array of points by field    
     $scope.sortBy = function (arr) {
         return new Promise((resolve, reject) => {
             var x = [].concat(arr).slice().sort((a, b) =>
@@ -147,11 +152,13 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
         });
     }
 
+    //Sort Asc\Desc
     $scope.switchAscDesc = function () {
         $scope.ascending = $scope.ascending * -1;
         $scope.updateSortValue();
     }
 
+    //Re-sorting after changing sort-field    
     $scope.updateSortValue = function () {
         $scope.sortBy($scope.points).then(arr => {
             $scope.points = arr
@@ -159,6 +166,7 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
         });
     }
 
+    //Filter points by category    
     $scope.filterByCategory = function (byFilter) {
         var x;
 
@@ -187,6 +195,7 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
 
     }
 
+    //Show review modal & get all reviews of point    
     $scope.showReviewsModal = function (id) {
         showLoading();
 
@@ -222,6 +231,7 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
 
     }
 
+    //Resize search font by length    
     $scope.checkLength = function () {
         if ($scope.searchForm.length > searchLimit) {
             var font = parseInt($("#searchForm").css('font-size'))
@@ -237,6 +247,7 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
         $scope.filterByName();
     }
 
+    // Filter points by textual search    
     $scope.filterByName = function () {
         var x = JSON.parse(JSON.stringify($scope.points_temp))
 
@@ -253,12 +264,14 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
         });
     }
 
+    //Search point by text compare to name\category\description    
     $scope.searchPoint = function (p) {
         return p.name.toLowerCase().indexOf($scope.searchForm.toLowerCase()) >= 0 ||
             p.category.toLowerCase().indexOf($scope.searchForm.toLowerCase()) >= 0 ||
             p.description.toLowerCase().indexOf($scope.searchForm.toLowerCase()) >= 0
     }
 
+    //Clear all filtering     
     $scope.clearFiltering = function () {
         $scope.searchForm = '';
         $scope.categoryFilter = '';

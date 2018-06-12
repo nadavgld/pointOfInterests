@@ -6,13 +6,13 @@ app.controller('point', ['$scope', '$http', '$location', '$routeParams', '$cooki
     $scope.point = {};
     $scope.user = {};
     $scope.favorites = [];
-
     $scope.pointToReview;
     $scope.pointHasReviews;
 
     $scope.newReview = '';
     $scope.rate = 0;
 
+    //Initialize Scope - checks if user is logged-in; get point data
     $scope.init = function (setView) {
         showLoading();
 
@@ -69,6 +69,7 @@ app.controller('point', ['$scope', '$http', '$location', '$routeParams', '$cooki
         })
     }
 
+    // Checks if point is favorited
     $scope.isFavorited = function () {
         for (var i = 0; i < $scope.favorites.length; i++) {
             if ($scope.favorites[i].p_id == $scope.pointId) {
@@ -78,6 +79,7 @@ app.controller('point', ['$scope', '$http', '$location', '$routeParams', '$cooki
         return -1;
     }
 
+    // Toggle point from favorites
     $scope.toggleFavorite = function () {
         $scope.isFavorite = !$scope.isFavorite;
 
@@ -98,6 +100,7 @@ app.controller('point', ['$scope', '$http', '$location', '$routeParams', '$cooki
         $("#favoritesCount").html("(" + $scope.favorites.length + ")")
     }
 
+    // Show reviews modal
     $scope.showReviewsModal = function (id) {
         showLoading();
 
@@ -132,6 +135,7 @@ app.controller('point', ['$scope', '$http', '$location', '$routeParams', '$cooki
 
     }
 
+    // Rate point in review modal
     $scope.setRate = function (rate) {
         $scope.rate = rate;
 
@@ -146,6 +150,7 @@ app.controller('point', ['$scope', '$http', '$location', '$routeParams', '$cooki
         }
     }
 
+    // Sends review to a point to DB
     $scope.applyReview = function () {
         if ($scope.newReview.length < 10) {
             $scope.descriptionErr = "Description must be at least 10 characters";

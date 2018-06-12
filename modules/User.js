@@ -7,6 +7,7 @@ var dbUtil = require('../DButils');
 var Tokens = require('./Token');
 var util = require('./util');
 
+//Register
 router.post('/', (req, res) => {
     var newUser = req.body;
     var category = req.body.categories;
@@ -31,7 +32,7 @@ router.post('/', (req, res) => {
         })
 })
 
-//CHANGE API - GET CATEGORY NAME AS WELL
+//Gets {amount} of points from {user_id} categories
 router.get('/:user_id/point/:amount', (req, res) => {
     var user_id = parseInt(req.params.user_id);
     var amount = parseInt(req.params.amount);
@@ -63,6 +64,7 @@ router.get('/:user_id/point/:amount', (req, res) => {
     }
 })
 
+//Filtering top points from distinct categories
 function filterSameCategory(arr, num) {
     var new_arr = [];
     var times = 0;
@@ -92,6 +94,7 @@ function filterSameCategory(arr, num) {
     return new_arr;
 }
 
+//Gets questions of user by {email}
 router.get('/:email/question', (req, res) => {
     var email = req.params.email;
 
@@ -108,23 +111,25 @@ router.get('/:email/question', (req, res) => {
         })
 })
 
+//Gets user data stored in token
 router.get('/token/:token', (req, res) => {
     Tokens.getDataFromToken(req.params.token).then((response) => {
         res.send(response.payload);
     }).catch((response) => {
-        res.send({error:'Invalid Token'});
+        res.send({ error: 'Invalid Token' });
     })
 })
 
+//Checks if token is still alive
 router.get('/tokenIsAlive/:token', (req, res) => {
     Tokens.getDataFromToken(req.params.token).then((response) => {
         res.send(response.payload);
     }).catch((response) => {
-        res.send({error:'Invalid Token'});
+        res.send({ error: 'Invalid Token' });
     })
 })
 
-//CHANGE API TO EMAIL
+//Gets users password if answers are matched to questions
 router.post('/password', (req, res) => {
     var email = req.body.email;
     var answer = req.body.answer.trim().toLowerCase();
@@ -143,6 +148,7 @@ router.post('/password', (req, res) => {
         })
 })
 
+//User login
 router.post('/login', (req, res) => {
     var username = req.body.username;
     var password = req.body.password;
@@ -153,7 +159,7 @@ router.post('/login', (req, res) => {
                 res.status(500).send({ error: 'Username and password are not match' });
             }
             else {
-                //TOKEN
+                //TOKEN GENERATE
                 var payload = {
                     userName: response[0].username,
                     id: response[0].id,
@@ -170,6 +176,7 @@ router.post('/login', (req, res) => {
         })
 })
 
+//Gets user's categories
 router.get('/:user_id/category', (req, res) => {
     var user_id = parseInt(req.params.user_id);
 
@@ -193,6 +200,7 @@ router.get('/:user_id/category', (req, res) => {
     }
 })
 
+//Gets user's name by {user_id}
 router.get('/:user_id/name', (req, res) => {
     var user_id = parseInt(req.params.user_id);
 
@@ -207,6 +215,7 @@ router.get('/:user_id/name', (req, res) => {
 
 })
 
+//Gets user's favorite point by {user_id}
 router.get('/:user_id/favorite', (req, res) => {
     var user_id = parseInt(req.params.user_id);
 
@@ -231,6 +240,7 @@ router.get('/:user_id/favorite', (req, res) => {
     }
 })
 
+//Get's latest {amount} of favorite points by {user_id}
 router.get('/:user_id/latest/:amount', (req, res) => {
     var user_id = parseInt(req.params.user_id);
     var amount = parseInt(req.params.amount);
@@ -260,6 +270,7 @@ router.get('/:user_id/latest/:amount', (req, res) => {
     }
 })
 
+//Checks if {email} or {username} already taken
 router.get('/checkExistence/:email/:username', (req, res) => {
     var email = req.params.email;
     var username = req.params.username;
@@ -279,6 +290,7 @@ router.get('/checkExistence/:email/:username', (req, res) => {
         })
 })
 
+//Updates {user_id} favorite points
 router.put('/favorite', (req, res) => {
     var user_id = parseInt(req.body.user_id);
     var fps = req.body.fps;
@@ -298,9 +310,6 @@ router.put('/favorite', (req, res) => {
                 for (var i in fps) {
                     const currentIndex = i;
                     var fp = fps[i];
-
-                    //USE THIS DATE FUNCTION IN CLIENT WHEN FAVORITE A POINT (!!)
-                    // var d = new Date().toISOString().slice(0, 19).replace('T', ' ');
                     var d = fp.date;
 
                     dbUtil.execQuery(`if exists (select * from UserFavoritePoint where u_id = '${user_id}' and p_id = '${fp.point_id}') begin update UserFavoritePoint set active = '1', fav_order = '${fp.fav_order}', date = '${d}'

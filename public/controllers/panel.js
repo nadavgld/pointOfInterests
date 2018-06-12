@@ -5,10 +5,11 @@ Chart.defaults.pie.tooltips.callbacks.label = function (tooltipItem, data) {
     return label + ": " + count + " times";
 };
 
-app.controller('panel', ['$scope', '$http', '$location', '$routeParams', 'tokenService', '$cookies','localStorageService', function ($scope, $http, $location, $routeParams, tokenService, $cookies,localStorageService) {
+app.controller('panel', ['$scope', '$http', '$location', '$routeParams', 'tokenService', '$cookies', 'localStorageService', function ($scope, $http, $location, $routeParams, tokenService, $cookies, localStorageService) {
 
     $scope.user = {};
 
+    //Initialize Scope - checks if user is an admin
     $scope.init = function () {
         showLoading();
 
@@ -54,6 +55,7 @@ app.controller('panel', ['$scope', '$http', '$location', '$routeParams', 'tokenS
         $scope.$apply();
     }
 
+    // Gets all statistics data and loads it to Chart.js library 
     $scope.getStatistics = function () {
 
         $http.get('/statistics/views_agg/avg').then((response) => {
@@ -105,6 +107,7 @@ app.controller('panel', ['$scope', '$http', '$location', '$routeParams', 'tokenS
         })
     }
 
+    // Draw graph
     $scope.drawGraph = function (data, type, id, title) {
         views = data.map(t => t.views)
         names = data.map(t => t.name)
@@ -147,6 +150,7 @@ app.controller('panel', ['$scope', '$http', '$location', '$routeParams', 'tokenS
 
     }
 
+    // Draw graph V2
     $scope.drawGraph_review = function (x, y, data, type, id, title, gridLine) {
         colors = [];
 
@@ -192,6 +196,7 @@ app.controller('panel', ['$scope', '$http', '$location', '$routeParams', 'tokenS
 
 }]);
 
+// Generate random colors
 function rndColor() {
     var hex = '0123456789ABCDEF'.split(''),
         color = '#', i;

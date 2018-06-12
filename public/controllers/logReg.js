@@ -8,6 +8,8 @@ app.controller('logReg', ['$scope', '$http', '$location', '$routeParams', '$cook
     $scope.afterRegUser;
 
     formTemplate = ['username', 'password', 'city', 'country', 'firstName', 'lastName', 'question', 'answer', 'question2', 'answer2', 'email', 'categories']
+
+    //Initialize Scope - checks if user logged-in => redirect to profile, else load countries XML
     $scope.init = function () {
         showLoading();
         $scope.toLogin = true;
@@ -31,11 +33,13 @@ app.controller('logReg', ['$scope', '$http', '$location', '$routeParams', '$cook
 
     }
 
+    //Redirects to forget-password section
     $scope.passwordForget = function () {
         $location.path('/forget')
         $location.replace()
     }
 
+    //Toggle between register-login
     $scope.toggleLogReg = function () {
         $scope.toLogin = !($scope.toLogin);
         $scope.loginForm = {};
@@ -57,6 +61,7 @@ app.controller('logReg', ['$scope', '$http', '$location', '$routeParams', '$cook
 
     }
 
+    // Login 
     $scope.login = function () {
         showLoading();
 
@@ -82,6 +87,7 @@ app.controller('logReg', ['$scope', '$http', '$location', '$routeParams', '$cook
             })
     }
 
+    //Register & form validation
     $scope.register = function () {
         showLoading();
 
@@ -101,6 +107,7 @@ app.controller('logReg', ['$scope', '$http', '$location', '$routeParams', '$cook
 
     }
 
+    //Sends new user's data to DB
     $scope.postRegister = function () {
 
         var newUser = {
@@ -132,6 +139,7 @@ app.controller('logReg', ['$scope', '$http', '$location', '$routeParams', '$cook
         })
     }
 
+    //Checks if username or email already taken
     $scope.isEmailAndUserAvailable = function () {
         return new Promise((resolve, reject) => {
             var email = $scope.registerForm.email;
@@ -144,6 +152,7 @@ app.controller('logReg', ['$scope', '$http', '$location', '$routeParams', '$cook
         })
     }
 
+    //Validate register form by rules
     $scope.validateRegisterForm = function () {
         for (var idx in formTemplate) {
             var field = formTemplate[idx];
@@ -162,6 +171,7 @@ app.controller('logReg', ['$scope', '$http', '$location', '$routeParams', '$cook
 
 }]);
 
+// Validates register form
 function checkFormValue(field, value) {
     switch (field) {
         case "username":
@@ -221,6 +231,7 @@ function checkFormValue(field, value) {
 
 }
 
+// Converts XML to json
 function xml2json(xml) {
     try {
         var obj = {};

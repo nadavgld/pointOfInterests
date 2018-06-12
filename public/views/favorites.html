@@ -5,6 +5,7 @@
         <h6 class="text-success" ng-if="showFiltering"> - Hide Filtering & Search</h6>
     </div>
 
+    <!-- Filter Section -->
     <div class="filter-section">
         <div class="col-md-12 d-flex">
             <div class="col-md-4 mt-2">
@@ -60,14 +61,17 @@
         </div>
     </div>
 
+    <!-- Save Favorites -->
     <div class="col-md-12 mt-4 ml-4">
         <div class="col-md-4">
-            <button class="btn btn-success" ng-click="saveFavorites()"> <i class="fas fa-cloud"></i> Save Favorites</button>
+            <button class="btn btn-success" ng-click="saveFavorites()">
+                <i class="fas fa-cloud"></i> Save Favorites</button>
             <small class="text-success">{{saveMsg}}</small>
             <small class="text-danger">{{saveErr}}</small>
         </div>
     </div>
 
+    <!-- All Favorites -->
     <div ng-if="points.length > 0" class="grid-container-points mt-2">
         <div class="grid-item-points" ng-repeat="point in points">
             <div class="card">
@@ -78,18 +82,14 @@
                 </div>
                 <div class="card-body">
                     <img class="homepage-card-img mb-5" ng-src="{{point.img_url}}">
-                    <!-- <p class="card-text" ng-if="point.description.length > 200" title="{{point.description}}"> {{point.description | limitTo: 200}}.. </p> -->
-                    <!-- <p class="card-text" ng-if="point.description.length <= 200" title="{{point.description}}"> {{point.description}} </p> -->
                     <div class="form-group d-flex mt-5 ml-1">
-                        <label class="mt-1 mr-3" for="order">Order #</label> <input type="number" min="1" class="form-control w-25 orders" ng-change="swapPlaces(point.id)" ng-model="point.fav_order">
+                        <label class="mt-1 mr-3" for="order">Order #</label>
+                        <input type="number" min="1" class="form-control w-25 orders" ng-change="swapPlaces(point.id)"
+                            ng-model="point.fav_order">
                     </div>
                 </div>
                 <div class="card-footer d-inline-flex bg-dark text-white text-center">
                     <div class="col-md-1 pt-1">
-                        <!-- <div ng-if="!isFavorited(point.id)" class="pointer" ng-click="toggleFavorite(point.id)">
-                            <i class="far fa-star"></i>
-                        </div> -->
-
                         <div class="pointer yellow-star" ng-click="toggleFavorite(point.id)">
                             <i class="fas fa-star"></i>
                         </div>

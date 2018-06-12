@@ -4,6 +4,8 @@
     </div>
 
     <div class="col-md-12 mt-3 d-flex">
+        
+        <!-- Most Popular to user -->
         <div class="col-md-6 p-2 border-right">
             <h6>
                 Most populars to you
@@ -22,11 +24,6 @@
                             <p class="card-text" ng-if="point.description.length <= 250"> {{point.description}} </p>
                         </div>
                         <div class="card-footer d-inline-flex bg-dark text-white text-center">
-                            <!-- <div class="col-md-4 pl-0">
-                                <i class="fas fa-external-link-alt"></i>
-                                <a href="#!/point/{{point.id}}" class="card-link text-success">Link</a>
-                            </div> -->
-
                             <div class="col-md-4">
                                 <i class="fas fa-comments"></i>
                                 <button class="btn btn-link text-success m-0 p-0" ng-click="showReviewsModal('pu',point.id)"> {{ point.total_reviews || 0 }} </button>
@@ -44,6 +41,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- Latest favorite points by user -->
         <div class="col-md-6 p-2 border-left">
             <h6>
                 Latest favorites
@@ -62,11 +61,6 @@
                             <p class="card-text" ng-if="fav.description.length <= 250"> {{fav.description}} </p>
                         </div>
                         <div class="card-footer d-inline-flex bg-dark text-white text-center">
-                            <!-- <div class="col-md-4 pl-0">
-                                <i class="fas fa-external-link-alt"></i>
-                                <a href="#!/point/{{fav.id}}" class="card-link text-warning">Link</a>
-                            </div> -->
-
                             <div class="col-md-4">
                                 <i class="fas fa-comments"></i>
                                 <button class="btn btn-link text-warning m-0 p-0" ng-click="showReviewsModal('fav',fav.id)"> {{ fav.total_reviews || 0 }} </button>
@@ -93,6 +87,7 @@
     </div>
 </div>
 
+<!-- Reviews modal -->
 <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content review-modal-content">

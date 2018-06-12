@@ -1,10 +1,11 @@
 var map;
 var features = [];
 
-app.controller('map', ['$scope', '$http', '$location', '$routeParams', 'tokenService', '$cookies','localStorageService', function ($scope, $http, $location, $routeParams, tokenService, $cookies,localStorageService) {
+app.controller('map', ['$scope', '$http', '$location', '$routeParams', 'tokenService', '$cookies', 'localStorageService', function ($scope, $http, $location, $routeParams, tokenService, $cookies, localStorageService) {
 
     $scope.user = {};
 
+    //Initialize Scope - checks if user logged-in ; loads points to the map
     $scope.init = function () {
 
         tokenService.checkIfUserLoggedIn($cookies).then((response) => {
@@ -12,7 +13,7 @@ app.controller('map', ['$scope', '$http', '$location', '$routeParams', 'tokenSer
 
             $scope.favorites = localStorageService.get('favorites') ? localStorageService.get('favorites') : [];
             $("#favoritesCount").html("(" + $scope.favorites.length + ")")
-            
+
             if ($scope.favorites.length == 0) {
 
                 $http.get('/user/' + $scope.user.id + '/favorite?token=' + $scope.token).then((response) => {
@@ -39,6 +40,7 @@ app.controller('map', ['$scope', '$http', '$location', '$routeParams', 'tokenSer
         })
     }
 
+    // Generates map via mapbox
     $scope.getMap = function () {
 
         mapboxgl.accessToken = 'pk.eyJ1IjoibmFkYXZncmkiLCJhIjoiY2ppYmZneG81MWhjODNwcGZ1OWJvcmdoMCJ9.fYcGYOUgVO1feInVU394HQ';
@@ -67,32 +69,33 @@ app.controller('map', ['$scope', '$http', '$location', '$routeParams', 'tokenSer
                         "icon-allow-overlap": true
                     }
                 });
-    
+
                 map.on('click', 'places', function (e) {
                     var coordinates = e.features[0].geometry.coordinates.slice();
                     var description = e.features[0].properties.description;
-    
+
                     while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
                         coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
                     }
-    
+
                     new mapboxgl.Popup()
                         .setLngLat(coordinates)
                         .setHTML(description)
                         .addTo(map);
                 });
-    
+
                 map.on('mouseenter', 'places', function () {
                     map.getCanvas().style.cursor = 'pointer';
                 });
-    
+
                 map.on('mouseleave', 'places', function () {
                     map.getCanvas().style.cursor = '';
                 });
             });
-    
+
         }
 
+        // Gets points details
         $http.get('/point').then((response) => {
             var data = response.data;
             features = [];
@@ -102,7 +105,7 @@ app.controller('map', ['$scope', '$http', '$location', '$routeParams', 'tokenSer
                     features.push({
                         "type": "Feature",
                         "properties": {
-                            "description": "<strong> <a href='#!/point/"+data[i].id+"' class='text-success p-4'>"+data[i].name+" ["+data[i].category+"] </a></strong>",
+                            "description": "<strong> <a href='#!/point/" + data[i].id + "' class='text-success p-4'>" + data[i].name + " [" + data[i].category + "] </a></strong>",
                             "icon": "star"
                         },
                         "geometry": {

@@ -6,13 +6,13 @@ app.controller('passwordForget', ['$scope', '$http', '$location', '$routeParams'
     }
     $scope.err = {};
     $scope.hasQuestions = false;
-
     $scope.questions;
     $scope.answers = {
         answer: '',
         answer2: ''
     };
 
+    //First Step - Gets questionn by email
     $scope.getQuestions = function () {
         if (isMailValid($scope.user.email)) {
             $http.get('/user/' + $scope.user.email + "/question").then((response) => {
@@ -30,6 +30,7 @@ app.controller('passwordForget', ['$scope', '$http', '$location', '$routeParams'
         }
     }
 
+    // Second Step - Gets password by answers 
     $scope.getPassword = function () {
 
         $http.post('/user/password', {email: $scope.user.email, answer: $scope.answers.answer, answer2: $scope.answers.answer2 }).then((response) => {
@@ -48,6 +49,7 @@ app.controller('passwordForget', ['$scope', '$http', '$location', '$routeParams'
 
 }]);
 
+// Checks if mail is valid
 function isMailValid(value) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!re.test(value.toLowerCase())) {

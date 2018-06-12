@@ -1,12 +1,12 @@
 var express = require('express');
 var jwt = require('jsonwebtoken');
-
 var router = express.Router();
 
 var dbUtil = require('../DButils');
 var Tokens = require('./Token');
 var util = require('./util');
 
+//Return all points
 router.get('/', (req, res) => {
     dbUtil.execQuery("select * from points")
         .then((response) => {
@@ -22,6 +22,7 @@ router.get('/', (req, res) => {
         })
 })
 
+//Gets point details by point id
 router.get('/id/:id', (req, res) => {
     var id = parseInt(req.params.id);
 
@@ -39,6 +40,7 @@ router.get('/id/:id', (req, res) => {
         })
 })
 
+//Gets {amount} number of random points above constant rating
 router.get('/random/:amount', (req, res) => {
     var num = parseInt(req.params.amount);
     const rating = 2;
@@ -57,7 +59,7 @@ router.get('/random/:amount', (req, res) => {
         })
 })
 
-
+//Gets point details by it's name
 router.get('/:name', (req, res) => {
     var name = req.params.name.trim().toLowerCase();
 
@@ -75,6 +77,7 @@ router.get('/:name', (req, res) => {
         })
 })
 
+//Post review to a point
 router.post('/review', (req, res) => {
     var point_id = parseInt(req.body.point_id);
     var review = req.body.review;
@@ -111,7 +114,7 @@ router.post('/review', (req, res) => {
     }
 })
 
-//WITH REVIEW ID
+//Updates a review
 router.put('/review', (req, res) => {
     var point_id = parseInt(req.body.point_id);
     var review = req.body.review;
@@ -148,6 +151,7 @@ router.put('/review', (req, res) => {
     }
 })
 
+//Sets view-counter of a point +1
 router.put('/views', (req, res) => {
     var point_id = parseInt(req.body.point_id);
 

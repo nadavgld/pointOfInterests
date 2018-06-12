@@ -6,10 +6,10 @@ app.controller('profile', ['$scope', '$http', '$location', '$routeParams', '$coo
     $scope.point_for_user = [];
     $scope.latest_favorited = [];
     $scope.favorites = [];
-
     $scope.pointToReview;
     $scope.pointHasReviews;
 
+    //Initialize Scope - get latest favorited points & most popular to this user
     $scope.init = function () {
         showLoading();
 
@@ -70,7 +70,7 @@ app.controller('profile', ['$scope', '$http', '$location', '$routeParams', '$coo
                         var promises = [];
                         for (var i = 0; i < 2; i++) {
                             var id = $scope.favorites[i].p_id;
-                            var _p = $http.get('/point/id/' + id)/*.then((response) => $scope.latest_favorited.push(response.data[0]))*/
+                            var _p = $http.get('/point/id/' + id)
                             promises.push(_p)
                         }
 
@@ -89,6 +89,7 @@ app.controller('profile', ['$scope', '$http', '$location', '$routeParams', '$coo
         })
     }
 
+    // show reviews modal
     $scope.showReviewsModal = function (type, id) {
         showLoading();
 

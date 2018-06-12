@@ -1,5 +1,6 @@
 app.service('tokenService', ['$http', function ($http) {
 
+    // Checks if user logged-in = if token is exists or valid 
     this.checkIfUserLoggedIn = function (cookies) {
         return new Promise((resolve, reject) => {
 

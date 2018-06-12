@@ -4,14 +4,12 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Points Of Interests</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>Points Of Interests</title>
+
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css" />
-    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+"
-        crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-
     <link rel="stylesheet" href="style.css" />
     <script src="/bower_components/jquery/dist/jquery.js"></script>
     <script src="/bower_components/angular/angular.js"></script>
@@ -20,10 +18,11 @@
     <link href="https://fonts.googleapis.com/css?family=Sunflower:300" rel="stylesheet">
 </head>
 
-<body class="">
+<body>
 
     <main role="main">
 
+        <!-- NavBar -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-menu sticky">
             <i class="fas fa-paper-plane mr-1 text-success"></i>
             <a class="navbar-brand text-success" href="#">POI - N.Y.C</a>
@@ -106,6 +105,7 @@
             </div>
         </nav>
 
+        <!-- ngView -->
         <div ng-view class="container-2"></div>
     </main>
 
@@ -164,13 +164,13 @@
     </div>
 
     <script>
-        // var _time = new Date();
         function showAboutModal(event) {
             event.preventDefault();
             $('#aboutModal').modal('show');
         }
     </script>
 
+    <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
     <script src="./bower_components/poly/polymaps.js"></script>
     <script src='https://api.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.js'></script>

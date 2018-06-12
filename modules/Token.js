@@ -1,6 +1,7 @@
 var jwt = require('jsonwebtoken');
 const secret = "TutBanana";
 
+//Token generation by {payload} and limit time via JWT
 exports.generateToken = function (payload, expires) {
 
     var token = jwt.sign(payload, secret, {
@@ -10,6 +11,7 @@ exports.generateToken = function (payload, expires) {
     return token;
 }
 
+//Decode {token}
 exports.getDataFromToken = function (token) {
     return new Promise((resolve, reject) => {
         jwt.verify(token, secret, function (err, decoded) {
@@ -23,14 +25,13 @@ exports.getDataFromToken = function (token) {
     })
 }
 
+//Checks if token is still valid
 exports.checkToken = function (req) {
 
     return new Promise((resolve, reject) => {
 
         var token = req.body.token || req.query.token || req.headers['x-access-token'];
-        // decode token
         if (token) {
-            // verifies secret and checks exp
             jwt.verify(token, secret, function (err, decoded) {
                 if (err)
                     reject(null);

@@ -1,5 +1,6 @@
 <div class="row d-block" ng-init="init(true)">
 
+    <!-- Point -->
     <div class="w-75 m-auto jumbotron pt-3 pb-3">
         <h1 class="text-left display-4 pl-3">{{point.name}}</h1>
         <div class="d-flex">
@@ -45,6 +46,7 @@
         </div>
     </div>
 
+    <!-- Add Review -->
     <div class="comment-section">
         <h5 class="display-6">
             <button class="btn btn-success" onclick="$('#addReviewModal').modal('show');">Add Review</button>
@@ -137,7 +139,7 @@
                     </div>
                 </div>
                 <small ng-bind="rateErr" class="text-danger"></small>
-            
+
                 <button class="btn btn-success w-100 mt-2" ng-click="applyReview()">Review</button>
             </div>
         </div>

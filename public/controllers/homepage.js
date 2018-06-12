@@ -2,10 +2,10 @@
 app.controller('homepage', ['$scope', '$http', '$location', '$routeParams', '$cookies', 'tokenService', function ($scope, $http, $location, $routeParams, $cookies, tokenService) {
 
     $scope.popularPoints = [];
-
     $scope.pointToReview;
     $scope.pointHasReviews;
 
+    //Initialize Scope - get random points
     $scope.init = function () {
         showLoading();
 
@@ -24,6 +24,7 @@ app.controller('homepage', ['$scope', '$http', '$location', '$routeParams', '$co
 
     }
 
+    //Show review modal
     $scope.showReviewsModal = function (id) {
         showLoading();
 

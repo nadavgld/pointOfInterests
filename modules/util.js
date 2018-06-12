@@ -1,8 +1,8 @@
 var dbUtil = require('../DButils');
 var _this = this;
 
+//Adds reviews to a point
 exports.getLatestReviewsToPoints = function (Points, amount) {
-    // var top = amount == 0 ? "" : `top ${amount}`;
     return new Promise((resolve, reject) => {
         if (Points.length == 0)
             resolve([]);
@@ -54,6 +54,7 @@ exports.getLatestReviewsToPoints = function (Points, amount) {
     });
 }
 
+//Side-function to register - insert all new user's categories
 exports.insertUserCategory = function (categories, uid) {
     return new Promise((resolve, reject) => {
         if (!categories || categories.length == 0)
@@ -78,6 +79,7 @@ exports.insertUserCategory = function (categories, uid) {
     });
 }
 
+//Gets array of points ids, returns full detailed-points 
 exports.getPointById = function (Points) {
     return new Promise((resolve, reject) => {
         if (!Points || Points.length == 0)

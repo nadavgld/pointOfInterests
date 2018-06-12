@@ -11,8 +11,6 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
     $scope.user = {};
     $scope.searchForm;
     $scope.showFiltering = true;
-    // $scope.favorites = [];
-
     $scope.saveMsg = '';
     $scope.saveErr = '';
 
@@ -49,6 +47,7 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
         }
     ]
 
+    //Initialize Scope - gets all favorites from localstorage\db
     $scope.init = function () {
         showLoading();
 
@@ -90,6 +89,7 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
         })
     }
 
+    //Swap favorite point places while re-ordering
     $scope.swapPlaces = function (id) {
         var neworder = $scope.points.filter(p => p.id == id)[0].fav_order;
         $scope.points_temp.filter(p => p.id == id)[0].fav_order = neworder;
@@ -108,12 +108,12 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
                 $scope.points_temp[i].fav_order = swapTo;
 
                 $scope.filterByCategory();
-                // $scope.syncFavorites();
                 break;
             }
         }
     }
 
+    //Sub-function; checks which index to swap to
     $scope.getEmptySpot = function () {
         for (var i = 1; i <= $scope.points_temp.length; i++) {
             if ($scope.points_temp.filter(f => f.fav_order == i).length == 0)
@@ -123,15 +123,7 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
         return -1;
     }
 
-    // $scope.syncFavorites = function () {
-    //     for (var i = 0; i < $scope.favorites.length; i++) {
-    //         $scope.favorites[i].fav_order = $scope.points_temp.filter(p=>p.id == $scope.favorites[i].p_id)[0].fav_order
-    //     }
-
-    //     localStorageService.set('favorites',$scope.favorites);
-    //     $(".orders").attr('max', $scope.favorites.length);
-    // }
-
+    //Get all favorites
     $scope.getAllFavs = function () {
         var promises = [];
 
@@ -161,6 +153,7 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
         hideLoading();
     }
 
+    //Checks if a point is favorited
     $scope.isFavorited = function (id) {
         id = parseInt(id);
 
@@ -172,6 +165,7 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
         return false;
     }
 
+    //Sends array of points to DB
     $scope.saveFavorites = function () {
 
         var pointsToSave = [];
@@ -206,12 +200,12 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
         })
     }
 
+    //Favorite\Un-favorite a point
     $scope.toggleFavorite = function (id) {
         id = parseInt(id);
 
         $scope.points_temp.sort((a, b) => a.fav_order < b.fav_order ? -1 : 1);
 
-        // if ($scope.isFavorited(id)) {
         var idx = -1;
 
         for (var i = 0; i < $scope.points_temp.length; i++) {
@@ -229,20 +223,11 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
                     $scope.points_temp[i].fav_order = empty
                 }
             }
-            // $scope.syncFavorites()
         }
-        // }
 
         localStorageService.set('favorites', $scope.points_temp)
         $("#favoritesCount").html("(" + $scope.points_temp.length + ")")
         $(".orders").attr('max', $scope.points_temp.length);
-
-        // for (var i = 0; i < $scope.points_temp.length; i++) {
-        //     if (parseInt($scope.points_temp[i].id) == id) {
-        //         $scope.points_temp.splice(i, 1);
-        //         break;
-        //     }
-        // }
 
         for (var i = 0; i < $scope.points.length; i++) {
             if (parseInt($scope.points[i].id) == id) {
@@ -254,6 +239,7 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
         $scope.filterByCategory(false);
     }
 
+    //Show\Hide filtering section
     $scope.toggleFiltering = function () {
         $scope.showFiltering = !$scope.showFiltering;
 
@@ -265,6 +251,7 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
         }
     }
 
+    //Sort array of points by field
     $scope.sortBy = function (arr) {
         return new Promise((resolve, reject) => {
             var x = [].concat(arr).slice().sort((a, b) =>
@@ -274,17 +261,13 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
         });
     }
 
-    $scope.sortFavsOrder = function () {
-        for (let i = 0; i < $scope.points.length; i++) {
-            $scope.points[i].fav_order = (i + 1);
-        }
-    }
-
+    //Sort Asc\Desc
     $scope.switchAscDesc = function () {
         $scope.ascending = $scope.ascending * -1;
         $scope.updateSortValue();
     }
 
+    //Re-sorting after changing sort-field
     $scope.updateSortValue = function () {
         $scope.sortBy($scope.points).then(arr => {
             $scope.points = arr
@@ -293,6 +276,7 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
         });
     }
 
+    //Filter points by category
     $scope.filterByCategory = function (byFilter) {
         var x;
 
@@ -321,6 +305,7 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
 
     }
 
+    //Show review modal & get all reviews of point
     $scope.showReviewsModal = function (id) {
         showLoading();
 
@@ -356,6 +341,7 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
 
     }
 
+    //Resize search font by length
     $scope.checkLength = function () {
         if ($scope.searchForm.length > searchLimit) {
             var font = parseInt($("#searchForm").css('font-size'))
@@ -371,6 +357,7 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
         $scope.filterByName();
     }
 
+    // Filter points by textual search
     $scope.filterByName = function () {
         var x = JSON.parse(JSON.stringify($scope.points_temp))
 
@@ -387,12 +374,14 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
         });
     }
 
+    //Search point by text compare to name\category\description
     $scope.searchPoint = function (p) {
         return p.name.toLowerCase().indexOf($scope.searchForm.toLowerCase()) >= 0 ||
             p.category.toLowerCase().indexOf($scope.searchForm.toLowerCase()) >= 0 ||
             p.description.toLowerCase().indexOf($scope.searchForm.toLowerCase()) >= 0
     }
 
+    //Clear all filtering 
     $scope.clearFiltering = function () {
         $scope.searchForm = '';
         $scope.categoryFilter = '';

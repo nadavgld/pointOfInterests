@@ -1,3 +1,4 @@
+//Requires
 var express = require('express');
 var bodyParser = require('body-parser');
 var cors = require('cors');
@@ -25,7 +26,6 @@ app.use('/point', Points);
 app.use('/category', Category);
 
 // Web-Statistics
-
 app.get('/statistics/views_agg/:agg', (req, res) => {
     var agg = req.params.agg;
     dbUtil.execQuery("select " + agg + "(views) as views,b.name from points a join categories b on a.category_id=b.id group by b.name")
@@ -75,6 +75,5 @@ app.get('/statistics/time/:table/:field', (req, res) => {
             res.send(response)
         }).catch(() => res.sendStatus(300))
 })
-
 
 app.listen(PORT, () => { console.log(`listening to ${PORT}`) })
