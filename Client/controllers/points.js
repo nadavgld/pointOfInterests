@@ -12,6 +12,7 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
     $scope.searchForm;
     $scope.showFiltering = true;
     $scope.favorites = [];
+    $scope.isLoggedIn = false;
 
     _sLimit = 14;
     _fBase = '100px'
@@ -46,46 +47,50 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
     $scope.init = function () {
         showLoading();
 
-        tokenService.checkIfUserLoggedIn($cookies).then((response) => {
-            $scope.token = $cookies.get('token');
+        $scope.token = $cookies.get('token') ? $cookies.get('token') : undefined;
 
+
+        if ($scope.token) {
             $http.get('http://localhost:3000/user/token/' + $scope.token).then((response) => {
                 if (!response.data.error) {
+                    $scope.isLoggedIn = true;
+                    
                     $scope.user.username = response.data.userName;
                     $scope.user.id = response.data.id;
 
-                    $http.get('http://localhost:3000/point').then((response) => {
-                        $scope.points = response.data;
-                        $scope.points_temp = response.data;
+                    $scope.favorites = localStorageService.get('favorites') ? localStorageService.get('favorites') : [];
 
-                        $http.get('http://localhost:3000/category').then((response) => {
-                            $scope.categories = response.data;
-                            $scope.filterByCategory(false);
-                            $scope.favorites = localStorageService.get('favorites') ? localStorageService.get('favorites') : [];
+                    if ($scope.favorites.length == 0) {
 
-                            if ($scope.favorites.length == 0) {
+                        $http.get('http://localhost:3000/user/' + $scope.user.id + '/favorite?token=' + $scope.token).then((response) => {
+                            $scope.favorites = response.data;
+                            $scope.favorites.map(f => f.date = f.date.slice(0, 19).replace('T', ' '))
 
-                                $http.get('http://localhost:3000/user/' + $scope.user.id + '/favorite?token=' + $scope.token).then((response) => {
-                                    $scope.favorites = response.data;
-                                    $scope.favorites.map(f => f.date = f.date.slice(0, 19).replace('T', ' '))
+                            localStorageService.set('favorites', $scope.favorites);
+                            $("#favoritesCount").html("(" + $scope.favorites.length + ")")
 
-                                    localStorageService.set('favorites', $scope.favorites);
-                                    $("#favoritesCount").html("(" + $scope.favorites.length + ")")
+                        })
+                    } else {
+                        $("#favoritesCount").html("(" + $scope.favorites.length + ")")
+                    }
 
-                                })
-                            } else {
-                                $("#favoritesCount").html("(" + $scope.favorites.length + ")")
-                            }
-
-                            hideLoading();
-                        });
-                    })
                 }
             });
-        }).catch((err) => {
-            redirectTo('/', $scope, $location);
+        }
+
+        $http.get('http://localhost:3000/point').then((response) => {
+            $scope.points = response.data;
+            $scope.points_temp = response.data;
+
+            $http.get('http://localhost:3000/category').then((response) => {
+                $scope.categories = response.data;
+                $scope.filterByCategory(false);
+
+                hideLoading();
+            });
         })
     }
+
 
     //Checks if a point is favorited
     $scope.isFavorited = function (id) {

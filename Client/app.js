@@ -65,7 +65,7 @@ function hideLoading() {
 function showUserNav(isAdmin) {
     $("#profileNav").removeClass('d-none');
     $("#outNav").removeClass('d-none');
-    $("#pointsNav").removeClass('d-none');
+    // $("#pointsNav").removeClass('d-none');
     $("#favoritesNav").removeClass('d-none');
     $("#mapNav").removeClass('d-none');
     $("#logRegNav").addClass('d-none');
@@ -79,8 +79,8 @@ function showUserNav(isAdmin) {
 function showLogRegNav() {
     $("#profileNav").addClass('d-none');
     $("#outNav").addClass('d-none');
-    $("#pointsNav").addClass('d-none');
     $("#adminNav").addClass('d-none');
+    // $("#pointsNav").addClass('d-none');
     $("#favoritesNav").addClass('d-none');
     $("#mapNav").addClass('d-none');
     $("#logRegNav").removeClass('d-none');

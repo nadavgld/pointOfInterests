@@ -77,11 +77,11 @@
                 </div>
                 <div class="card-footer d-inline-flex bg-dark text-white text-center">
                     <div class="col-md-1 pt-1">
-                        <div ng-if="!isFavorited(point.id)" class="pointer" ng-click="toggleFavorite(point.id)">
+                        <div ng-if="!isFavorited(point.id) && isLoggedIn" class="pointer" ng-click="toggleFavorite(point.id)">
                             <i class="far fa-star"></i>
                         </div>
 
-                        <div ng-if="isFavorited(point.id)" class="pointer yellow-star" ng-click="toggleFavorite(point.id)">
+                        <div ng-if="isFavorited(point.id) && isLoggedIn" class="pointer yellow-star" ng-click="toggleFavorite(point.id)">
                             <i class="fas fa-star"></i>
                         </div>
                     </div>
