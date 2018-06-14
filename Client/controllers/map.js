@@ -16,7 +16,7 @@ app.controller('map', ['$scope', '$http', '$location', '$routeParams', 'tokenSer
 
             if ($scope.favorites.length == 0) {
 
-                $http.get('/user/' + $scope.user.id + '/favorite?token=' + $scope.token).then((response) => {
+                $http.get('http://localhost:3000/user/' + $scope.user.id + '/favorite?token=' + $scope.token).then((response) => {
                     $scope.favorites = response.data;
                     localStorageService.set('favorites', $scope.favorites);
                     $("#favoritesCount").html("(" + $scope.favorites.length + ")")
@@ -24,7 +24,7 @@ app.controller('map', ['$scope', '$http', '$location', '$routeParams', 'tokenSer
                 })
             }
 
-            $http.get('/user/token/' + $scope.token).then((response) => {
+            $http.get('http://localhost:3000/user/token/' + $scope.token).then((response) => {
                 if (!response.data.error) {
                     $scope.user.username = response.data.userName;
                     $scope.user.id = response.data.id;
@@ -102,7 +102,7 @@ app.controller('map', ['$scope', '$http', '$location', '$routeParams', 'tokenSer
         }
 
         // Gets points details
-        $http.get('/point').then((response) => {
+        $http.get('http://localhost:3000/point').then((response) => {
             var data = response.data;
             features = [];
 

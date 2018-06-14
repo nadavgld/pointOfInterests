@@ -49,23 +49,23 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
         tokenService.checkIfUserLoggedIn($cookies).then((response) => {
             $scope.token = $cookies.get('token');
 
-            $http.get('/user/token/' + $scope.token).then((response) => {
+            $http.get('http://localhost:3000/user/token/' + $scope.token).then((response) => {
                 if (!response.data.error) {
                     $scope.user.username = response.data.userName;
                     $scope.user.id = response.data.id;
 
-                    $http.get('/point').then((response) => {
+                    $http.get('http://localhost:3000/point').then((response) => {
                         $scope.points = response.data;
                         $scope.points_temp = response.data;
 
-                        $http.get('/category').then((response) => {
+                        $http.get('http://localhost:3000/category').then((response) => {
                             $scope.categories = response.data;
                             $scope.filterByCategory(false);
                             $scope.favorites = localStorageService.get('favorites') ? localStorageService.get('favorites') : [];
 
                             if ($scope.favorites.length == 0) {
 
-                                $http.get('/user/' + $scope.user.id + '/favorite?token=' + $scope.token).then((response) => {
+                                $http.get('http://localhost:3000/user/' + $scope.user.id + '/favorite?token=' + $scope.token).then((response) => {
                                     $scope.favorites = response.data;
                                     $scope.favorites.map(f => f.date = f.date.slice(0, 19).replace('T', ' '))
 
@@ -215,7 +215,7 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
                 const id = point.reviews[user].u_id;
                 const idx = user;
 
-                $http.get('/user/' + id + '/name').then((response) => {
+                $http.get('http://localhost:3000/user/' + id + '/name').then((response) => {
                     point.reviews[idx].username = response.data.username;
                     point.reviews[idx].time = new Date(point.reviews[idx].timestamp).getTime();
 

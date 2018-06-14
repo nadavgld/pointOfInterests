@@ -15,7 +15,7 @@ app.controller('passwordForget', ['$scope', '$http', '$location', '$routeParams'
     //First Step - Gets questionn by email
     $scope.getQuestions = function () {
         if (isMailValid($scope.user.email)) {
-            $http.get('/user/' + $scope.user.email + "/question").then((response) => {
+            $http.get('http://localhost:3000/user/' + $scope.user.email + "/question").then((response) => {
                 var data = response.data;
                 if (data.error) {
                     $scope.err.email = data.error;
@@ -33,7 +33,7 @@ app.controller('passwordForget', ['$scope', '$http', '$location', '$routeParams'
     // Second Step - Gets password by answers 
     $scope.getPassword = function () {
 
-        $http.post('/user/password', {email: $scope.user.email, answer: $scope.answers.answer, answer2: $scope.answers.answer2 }).then((response) => {
+        $http.post('http://localhost:3000/user/password', {email: $scope.user.email, answer: $scope.answers.answer, answer2: $scope.answers.answer2 }).then((response) => {
             var data = response.data;
             if (data.error) {
                 $scope.err.password = data.error;

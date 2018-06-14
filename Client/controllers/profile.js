@@ -18,7 +18,7 @@ app.controller('profile', ['$scope', '$http', '$location', '$routeParams', '$coo
             $scope.favorites = localStorageService.get('favorites') ? localStorageService.get('favorites') : [];
             $("#favoritesCount").html("(" + $scope.favorites.length + ")")
 
-            $http.get('/user/token/' + $scope.token).then((response) => {
+            $http.get('http://localhost:3000/user/token/' + $scope.token).then((response) => {
                 if (!response.data.error) {
                     $scope.user.username = response.data.userName;
                     $scope.user.id = response.data.id;
@@ -26,7 +26,7 @@ app.controller('profile', ['$scope', '$http', '$location', '$routeParams', '$coo
 
                     var req = {
                         method: 'get',
-                        url: '/user/' + $scope.user.id + '/point/2',
+                        url: 'http://localhost:3000/user/' + $scope.user.id + '/point/2',
                         headers: {
                             'x-access-token': $scope.token
                         }
@@ -41,7 +41,7 @@ app.controller('profile', ['$scope', '$http', '$location', '$routeParams', '$coo
 
                     if ($scope.favorites.length == 0) {
 
-                        $http.get('/user/' + $scope.user.id + '/favorite?token=' + $scope.token).then((response) => {
+                        $http.get('http://localhost:3000/user/' + $scope.user.id + '/favorite?token=' + $scope.token).then((response) => {
                             $scope.favorites = response.data;
                             localStorageService.set('favorites', $scope.favorites);
                             $("#favoritesCount").html("(" + $scope.favorites.length + ")")
@@ -50,7 +50,7 @@ app.controller('profile', ['$scope', '$http', '$location', '$routeParams', '$coo
 
                         var req2 = {
                             method: 'get',
-                            url: '/user/' + $scope.user.id + '/latest/2',
+                            url: 'http://localhost:3000/user/' + $scope.user.id + '/latest/2',
                             headers: {
                                 'x-access-token': $scope.token
                             }
@@ -71,7 +71,7 @@ app.controller('profile', ['$scope', '$http', '$location', '$routeParams', '$coo
                         for (var i = 0; i < 2; i++) {
                             if($scope.favorites[i]){
                                 var id = $scope.favorites[i].p_id;
-                                var _p = $http.get('/point/id/' + id)
+                                var _p = $http.get('http://localhost:3000/point/id/' + id)
                                 promises.push(_p)
                             }
                         }
@@ -113,7 +113,7 @@ app.controller('profile', ['$scope', '$http', '$location', '$routeParams', '$coo
                 const id = point.reviews[user].u_id;
                 const idx = user;
 
-                $http.get('/user/' + id + '/name').then((response) => {
+                $http.get('http://localhost:3000/user/' + id + '/name').then((response) => {
                     point.reviews[idx].username = response.data.username;
                     point.reviews[idx].time = new Date(point.reviews[idx].timestamp).getTime();
 

@@ -5,7 +5,7 @@ app.service('tokenService', ['$http', function ($http) {
         return new Promise((resolve, reject) => {
 
             if (cookies.get('token')) {
-                $http.get('/user/token/' + cookies.get('token')).then((response) => {
+                $http.get('http://localhost:3000/user/token/' + cookies.get('token')).then((response) => {
                     if (!response.data.error) {
 
                         var isAdmin = response.data.isAdmin == 1 ? true : false;

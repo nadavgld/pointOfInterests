@@ -49,10 +49,10 @@ app.config(function ($routeProvider) {
 
 hideLoading();
 
-$(".navbar-nav > .nav-item > a").click((event) => {
-    $(".nav-item").removeClass("active");
-    $(event.target).parent().addClass("active");
-})
+// $(".navbar-nav > .nav-item > a").click((event) => {
+//     $(".nav-item").removeClass("active");
+//     $(event.target).parent().addClass("active");
+// })
 
 function showLoading() {
     $(".sk-circle").show();

@@ -12,7 +12,7 @@ app.controller('homepage', ['$scope', '$http', '$location', '$routeParams', '$co
         tokenService.checkIfUserLoggedIn($cookies).then((response) => {
             redirectTo('/profile', $scope, $location);
         }).catch((err) => {
-            $http.get('/point/random/3').then((response) => {
+            $http.get('http://localhost:3000/point/random/3').then((response) => {
 
                 if (response.data) {
                     $scope.popularPoints = response.data;
@@ -44,7 +44,7 @@ app.controller('homepage', ['$scope', '$http', '$location', '$routeParams', '$co
                 const id = point.reviews[user].u_id;
                 const idx = user;
 
-                $http.get('/user/' + id + '/name').then((response) => {
+                $http.get('http://localhost:3000/user/' + id + '/name').then((response) => {
                     point.reviews[idx].username = response.data.username;
                     point.reviews[idx].time = new Date(point.reviews[idx].timestamp).getTime();
 

@@ -21,7 +21,7 @@ app.controller('panel', ['$scope', '$http', '$location', '$routeParams', 'tokenS
 
             if ($scope.favorites.length == 0) {
 
-                $http.get('/user/' + $scope.user.id + '/favorite?token=' + $scope.token).then((response) => {
+                $http.get('http://localhost:3000/user/' + $scope.user.id + '/favorite?token=' + $scope.token).then((response) => {
                     $scope.favorites = response.data;
                     localStorageService.set('favorites', $scope.favorites);
                     $("#favoritesCount").html("(" + $scope.favorites.length + ")")
@@ -29,7 +29,7 @@ app.controller('panel', ['$scope', '$http', '$location', '$routeParams', 'tokenS
                 })
             }
 
-            $http.get('/user/token/' + $scope.token).then((response) => {
+            $http.get('http://localhost:3000/user/token/' + $scope.token).then((response) => {
                 if (!response.data.error) {
                     $scope.user.username = response.data.userName;
                     $scope.user.id = response.data.id;
@@ -58,49 +58,49 @@ app.controller('panel', ['$scope', '$http', '$location', '$routeParams', 'tokenS
     // Gets all statistics data and loads it to Chart.js library 
     $scope.getStatistics = function () {
 
-        $http.get('/statistics/views_agg/avg').then((response) => {
+        $http.get('http://localhost:3000/statistics/views_agg/avg').then((response) => {
             var data = response.data;
             $scope.drawGraph(data, 'bar', 'avg_views', 'Average Views')
             hideLoading();
         })
 
-        $http.get('/statistics/views_agg/max').then((response) => {
+        $http.get('http://localhost:3000/statistics/views_agg/max').then((response) => {
             var data = response.data;
             $scope.drawGraph(data, 'bar', 'max_views', 'Max Views')
             hideLoading();
         })
 
-        $http.get('/statistics/views_percentile/0.9').then((response) => {
+        $http.get('http://localhost:3000/statistics/views_percentile/0.9').then((response) => {
             var data = response.data;
             $scope.drawGraph(data, 'bar', 'perc9', 'Percentile 0.9 Views')
             hideLoading();
         })
 
-        $http.get('/statistics/views_percentile/0.5').then((response) => {
+        $http.get('http://localhost:3000/statistics/views_percentile/0.5').then((response) => {
             var data = response.data;
             $scope.drawGraph(data, 'bar', 'perc5', 'Percentile 0.5 Views')
             hideLoading();
         })
 
-        $http.get('/statistics/review_length/users').then((response) => {
+        $http.get('http://localhost:3000/statistics/review_length/users').then((response) => {
             var data = response.data;
             $scope.drawGraph_review(data.map(t => t.description_length), data.map(t => t.username), data, 'bar', 'users_review', 'Average review length by users', true)
             hideLoading();
         })
 
-        $http.get('/statistics/review_length/points').then((response) => {
+        $http.get('http://localhost:3000/statistics/review_length/points').then((response) => {
             var data = response.data;
             $scope.drawGraph_review(data.map(t => t.description_length), data.map(t => t.name), data, 'horizontalBar', 'points_review', 'Average review length of points', true)
             hideLoading();
         })
 
-        $http.get('/statistics/time/userfavoritepoint/date').then((response) => {
+        $http.get('http://localhost:3000/statistics/time/userfavoritepoint/date').then((response) => {
             var data = response.data;
             $scope.drawGraph_review(data.map(t => t.count), data.map(t => t.hour + ":00"), data, 'pie', 'favorite_time', 'Favorite per hours along daytime', false)
             hideLoading();
         })
 
-        $http.get('/statistics/time/reviews/timestamp').then((response) => {
+        $http.get('http://localhost:3000/statistics/time/reviews/timestamp').then((response) => {
             var data = response.data;
             $scope.drawGraph_review(data.map(t => t.count), data.map(t => t.hour + ":00"), data, 'pie', 'review_time', 'Reviews per hours along daytime', false)
             hideLoading();

@@ -54,19 +54,19 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
         tokenService.checkIfUserLoggedIn($cookies).then((response) => {
             $scope.token = $cookies.get('token');
 
-            $http.get('/user/token/' + $scope.token).then((response) => {
+            $http.get('http://localhost:3000/user/token/' + $scope.token).then((response) => {
                 if (!response.data.error) {
                     $scope.user.username = response.data.userName;
                     $scope.user.id = response.data.id;
 
-                    $http.get('/category').then((response) => {
+                    $http.get('http://localhost:3000/category').then((response) => {
                         $scope.categories = response.data;
 
                         $scope.points_temp = localStorageService.get('favorites') ? localStorageService.get('favorites') : [];
 
                         if ($scope.points_temp.length == 0) {
 
-                            $http.get('/user/' + $scope.user.id + '/favorite?token=' + $scope.token).then((response) => {
+                            $http.get('http://localhost:3000/user/' + $scope.user.id + '/favorite?token=' + $scope.token).then((response) => {
                                 $scope.points_temp = response.data;
                                 $scope.points_temp.map(f => f.date = f.date.slice(0, 19).replace('T', ' '))
 
@@ -129,7 +129,7 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
 
         for (var i = 0; i < $scope.points_temp.length; i++) {
             var id = $scope.points_temp[i].p_id;
-            var _p = $http.get('/point/id/' + id).then((response) => $scope.points.push(response.data[0]))
+            var _p = $http.get('http://localhost:3000/point/id/' + id).then((response) => $scope.points.push(response.data[0]))
             promises.push(_p)
         }
 
@@ -185,7 +185,7 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
             token: $scope.token
         }
 
-        $http.put('/user/favorite', body).then((response) => {
+        $http.put('http://localhost:3000/user/favorite', body).then((response) => {
             $scope.saveMsg = "Saved Successfully";
 
             $timeout(() => {
@@ -325,7 +325,7 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
                 const id = point.reviews[user].u_id;
                 const idx = user;
 
-                $http.get('/user/' + id + '/name').then((response) => {
+                $http.get('http://localhost:3000/user/' + id + '/name').then((response) => {
                     point.reviews[idx].username = response.data.username;
                     point.reviews[idx].time = new Date(point.reviews[idx].timestamp).getTime();
 

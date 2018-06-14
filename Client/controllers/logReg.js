@@ -27,7 +27,7 @@ app.controller('logReg', ['$scope', '$http', '$location', '$routeParams', '$cook
                 $scope.countries = (xml2json($.parseXML(response.data))).Countries.Country;
             });
 
-            $http.get('/category').then((response) => {
+            $http.get('http://localhost:3000/category').then((response) => {
                 $scope.categories = response.data;
 
                 hideLoading();
@@ -71,7 +71,7 @@ app.controller('logReg', ['$scope', '$http', '$location', '$routeParams', '$cook
         var username = $scope.loginForm.username;
         var password = $scope.loginForm.password;
 
-        $http.post('/user/login', { username: username, password: password }).then((resp) => {
+        $http.post('http://localhost:3000/user/login', { username: username, password: password }).then((resp) => {
             $cookies.put('token', resp.data.token);
             showUserNav();
             hideLoading();
@@ -134,7 +134,7 @@ app.controller('logReg', ['$scope', '$http', '$location', '$routeParams', '$cook
             "answer2": $scope.registerForm.answer2
         }
 
-        $http.post('/user/', newUser).then((resp) => {
+        $http.post('http://localhost:3000/user/', newUser).then((resp) => {
             $scope.afterRegUser = $scope.registerForm.username;
 
             $scope.toggleLogReg();
@@ -153,7 +153,7 @@ app.controller('logReg', ['$scope', '$http', '$location', '$routeParams', '$cook
         return new Promise((resolve, reject) => {
             var email = $scope.registerForm.email;
             var username = $scope.registerForm.username;
-            $http.get('/user/checkExistence/' + email + '/' + username).then((response) => {
+            $http.get('http://localhost:3000/user/checkExistence/' + email + '/' + username).then((response) => {
                 resolve(response.data.isExists);
             }).catch((err) => {
                 reject(err)
