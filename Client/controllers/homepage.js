@@ -1,5 +1,5 @@
 
-app.controller('homepage', ['$scope', '$http', '$location', '$routeParams', '$cookies', 'tokenService', function ($scope, $http, $location, $routeParams, $cookies, tokenService) {
+app.controller('homepage', ['$scope', '$http', '$location', '$routeParams', '$cookies', 'tokenService','$rootScope', function ($scope, $http, $location, $routeParams, $cookies, tokenService,$rootScope) {
 
     $scope.popularPoints = [];
     $scope.pointToReview;
@@ -7,6 +7,7 @@ app.controller('homepage', ['$scope', '$http', '$location', '$routeParams', '$co
 
     //Initialize Scope - get random points
     $scope.init = function () {
+
         showLoading();
 
         tokenService.checkIfUserLoggedIn($cookies).then((response) => {

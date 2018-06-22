@@ -1,4 +1,4 @@
-app.service('tokenService', ['$http', function ($http) {
+app.service('tokenService', ['$http', '$rootScope', function ($http, $rootScope) {
 
     // Checks if user logged-in = if token is exists or valid 
     this.checkIfUserLoggedIn = function (cookies) {

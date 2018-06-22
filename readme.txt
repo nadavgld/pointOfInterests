@@ -35,3 +35,8 @@ Hello Guest, welcome to PointOfInterest N.Y.C!
 		Save favorite points to DB
 
 	Admin Panel - Statistics via charts
+
+Logins:
+	admins: ng 1212 | a a
+	regular: b a | c c | abc abc123 | eee ffff123 | lior liorlior1 | nirm nirnir1 | fefe 121212a |
+		 Gal galgal1 | nicenice abcabc1 | ngn ngngng1 | kof kofkof1
