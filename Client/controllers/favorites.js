@@ -111,6 +111,8 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
                 break;
             }
         }
+
+        localStorageService.set('favorites',$scope.points_temp);
     }
 
     //Sub-function; checks which index to swap to
@@ -198,6 +200,8 @@ app.controller('favorites', ['$scope', '$http', '$location', '$routeParams', '$c
                 $scope.saveErr = ''
             }, 3000);
         })
+
+        localStorageService.set('favorites',$scope.points_temp);
     }
 
     //Favorite\Un-favorite a point

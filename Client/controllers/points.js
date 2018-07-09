@@ -51,6 +51,8 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
 
 
         if ($scope.token) {
+            showUserNav();
+
             $http.get('http://localhost:3000/user/token/' + $scope.token).then((response) => {
                 if (!response.data.error) {
                     $scope.isLoggedIn = true;
@@ -76,6 +78,8 @@ app.controller('points', ['$scope', '$http', '$location', '$routeParams', '$cook
 
                 }
             });
+        }else{
+            showLogRegNav();
         }
 
         $http.get('http://localhost:3000/point').then((response) => {
